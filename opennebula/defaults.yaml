@@ -1,0 +1,29 @@
+{% load_yaml as rawmap %}
+Debian:
+  repo:
+    url: http://downloads.opennebula.org/repo/Debian/7
+    dist: stable
+    comps: opennebula
+    keyurl: http://downloads.opennebula.org/repo/Debian/repo.key
+  oned:
+    pkgs:
+      - opennebula
+      - opennebula-tools
+      #- ruby-opennebula {# TODO <- ? #}
+  compute_node:
+    pkgs:
+      - opennebula-node
+      #- sudo {# TODO <- ? #}
+      #- virtinst {# TODO <- ? #}
+  sunstone:
+    pkgs:
+      - opennebula-sunstone
+  oneflow:
+    pkgs:
+      - opennebula-flow
+      - ruby-treetop
+      - ruby-polyglot
+  onegate:
+    pkgs:
+      - opennebula-gate
+{% endload %}
