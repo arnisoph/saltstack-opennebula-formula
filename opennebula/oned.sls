@@ -5,6 +5,7 @@
 
 include:
   - opennebula
+  - opennebula._oneuser
 
 oned:
   pkg:
@@ -20,9 +21,21 @@ oned:
     - watch:
       - file: oned_conf
     - require:
+      - sls: opennebula._oneuser
       - file: oned_conf
       - file: /usr/share/one
       - file: /usr/share/one/hooks
+
+{% if salt['grains.get']('os_family') == 'Debian' and datamap.gems_setup.enabled != False %}
+install_gems: {# TODO: that fails, fix it! #}
+  cmd:
+    - wait
+    - name: {{ datamap.gems_setup.cmd|default('/usr/share/one/install_gems') }}
+    - watch:
+      - pkg: oned
+    - require_in:
+      - service: oned
+{% endif %}
 
 {% set f_o = config.oned_conf|default({}) %}
 oned_conf:
@@ -61,7 +74,3 @@ oned_conf:
 {% for r in datamap['f_usoh.recurse']|default(['user', 'group', 'file_mode', 'dir_mode']) %}
       - {{ r }}
 {% endfor %}
-
-#File /var/lib/one/.ssh/id_dsa
-#File /var/lib/one/.ssh/id_dsa.pub
-

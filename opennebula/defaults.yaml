@@ -5,6 +5,15 @@ Debian:
     dist: stable
     comps: opennebula
     keyurl: http://downloads.opennebula.org/repo/Debian/repo.key
+  gems_setup:
+    enabled: True
+  oneuser:
+    home: /var/lib/one
+    regenerate_ssh_keypair: True
+    ssh_pubkey: /var/lib/one/.ssh/id_rsa.pub
+    ssh_prvkey: /var/lib/one/.ssh/id_rsa
+    ssh_pubkey_old: /var/lib/one/.ssh/id_rsa.pub.dist
+    ssh_prvkey_old: /var/lib/one/.ssh/id_rsa.dist
   oned:
     pkgs:
       - opennebula
