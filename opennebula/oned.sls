@@ -27,7 +27,7 @@ oned:
       - file: /usr/share/one/hooks
 
 {% if salt['grains.get']('os_family') == 'Debian' and datamap.gems_setup.enabled != False %}
-install_gems: {# TODO: that fails, fix it! #}
+install_gems: {# TODO: that fails, install the gems/pkgs yourself! #}
   cmd:
     - wait
     - name: {{ datamap.gems_setup.cmd|default('/usr/share/one/install_gems') }}
@@ -74,3 +74,17 @@ oned_conf:
 {% for r in datamap['f_usoh.recurse']|default(['user', 'group', 'file_mode', 'dir_mode']) %}
       - {{ r }}
 {% endfor %}
+
+{% set f_oa = config.one_auth|default({}) %}
+{% if f_oa.manage|default(False) == True %}
+one_auth:
+  file:
+    - managed
+    - name: {{ f_oa.path|default('/var/lib/one/.one/one_auth') }}
+    - contents_pillar: opennebula:lookup:oned:config:one_auth:content
+    - mode: {{ f_oa.mode|default('600') }}
+    - user: {{ f_oa.user|default('oneadmin') }}
+    - group: {{ f_oa.group|default('oneadmin') }}
+    - require:
+      - pkg: oned
+{% endif %}
