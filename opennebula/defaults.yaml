@@ -15,8 +15,6 @@ Debian:
     ssh_prvkey_old: /var/lib/one/.ssh/id_rsa.dist
   oneadmingroup:
     name: oneadmin
-  users:
-    Foo: TODO
   oned:
     pkgs:
       - opennebula
