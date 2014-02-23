@@ -63,7 +63,7 @@ Sets OpenNebula Onegate up
 Additional resources
 ====================
 
-* Big thanks to the great work of the guys behind https://github.com/epost-dev/opennebula-puppet-module! They built are very nice looking module for Puppet.
+* Big thanks to the great work of the guys behind https://github.com/epost-dev/opennebula-puppet-module! They built a very nice looking module for Puppet.
 
 Formula Dependencies
 ====================
