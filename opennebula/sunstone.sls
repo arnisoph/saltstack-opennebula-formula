@@ -18,8 +18,6 @@ sunstone:
     - running
     - name: {{ service.name|default('opennebula-sunstone') }}
     - enable: {{ service.enable|default(True) }}
-    - require:
-      - sls: opennebula._oneuser
 
 #{% set f_ulos = config.usr_lib_one_sunstone|default({}) %}
 #/usr/lib/one/sunstone:

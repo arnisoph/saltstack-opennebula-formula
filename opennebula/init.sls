@@ -12,9 +12,6 @@ opennebula_repo: {# TODO: whack the hack #}
   {% endif %}
 {% endif %}
 
-
-#TODO: create user + group?
-
 #opennebula: TODO: dbus?
 #  pkg:
 #    - installed
