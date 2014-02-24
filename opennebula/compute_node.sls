@@ -3,6 +3,7 @@
 
 include:
   - opennebula
+  - opennebula._oneuser
 
 compute_node:
   pkg:

@@ -4,6 +4,8 @@
 
 include:
   - opennebula
+  - opennebula.oned
+  - opennebula._oneuser
 
 oneflow:
   pkg:
@@ -12,6 +14,8 @@ oneflow:
 {% for p in datamap['oneflow']['pkgs'] %}
       - {{ p }}
 {% endfor %}
+    - require:
+      - service: oned
   #TODO: use init script (http://dev.opennebula.org/issues/2183)
   #service:
     #- running

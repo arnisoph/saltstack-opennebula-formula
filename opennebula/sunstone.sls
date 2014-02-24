@@ -31,6 +31,7 @@ sunstone:
 #      - {{ r }}
 #{% endfor %}
 
+# flow/gate:
 #/etc/one/sunstone-server.conf:
 #/etc/one/sunstone-views/admin.yaml:
 #/etc/one/sunstone-views.yaml:
