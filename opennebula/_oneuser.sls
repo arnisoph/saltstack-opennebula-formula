@@ -10,6 +10,9 @@ oneadmin:
     - name: {{ datamap.oneadmin.name|default('oneadmin') }}
     - uid: {{ datamap.oneadmin.uid|default(9869) }}
     - gid: {{ datamap.oneadmin.uid|default(9869) }}
+    - optional_groups:
+      - {{ datamap.oneadmin.kvmgroupname|default('kvm') }}
+      - {{ datamap.oneadmin.libvirtgroupname|default('libvirt') }}
     - home: {{ datamap.oneadmin.home }}
     - shell: {{ datamap.oneadmin.shell|default('/bin/bash') }}
     - createhome: True
