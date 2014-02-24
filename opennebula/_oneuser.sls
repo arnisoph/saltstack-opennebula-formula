@@ -73,4 +73,5 @@ oneadmin_ssh_keypair:
       - file: oneadmin_sshauthkeys
 {% endif %}
 
-
+#TODO add ssh key from oneadmin of the oned host
+#TODO add known hosts (nodes) to the known_hosts file of the oneadmin user at the oned host
