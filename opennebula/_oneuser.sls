@@ -26,12 +26,32 @@ oneadmin:
     - system: True
   file:
     - directory
-    - name: {{ datamap.oneadmin.home ~ '/.one' }}
+    - name: {{ datamap.oneadmin.home }}/.one
     - mode: {{ datamap.oneadmin.onedir_mode|default('700') }}
     - user: {{ datamap.oneadmin.onedir_owner|default('oneadmin') }}
     - group: {{ datamap.oneadmin.onedir_group|default('oneadmin') }}
     - require:
       - user: oneadmin
+
+oneadmin_sshdir:
+  file:
+    - directory
+    - name: {{ datamap.oneadmin.home }}/.ssh
+    - mode: {{ datamap.oneadmin.sshdir_mode|default('700') }}
+    - user: {{ datamap.oneadmin.sshdir_owner|default('oneadmin') }}
+    - group: {{ datamap.oneadmin.sshdir_group|default('oneadmin') }}
+    - require:
+      - user: oneadmin
+
+oneadmin_sshauthkeys:
+  file:
+    - managed
+    - name: {{ datamap.oneadmin.home }}/.ssh/authorized_keys
+    - mode: {{ datamap.oneadmin.sshauthkeysfile_mode|default('600') }}
+    - user: {{ datamap.oneadmin.name|default('oneadmin') }}
+    - group: {{ datamap.oneadmingroup.name|default('oneadmin') }}
+    - require:
+      - file: oneadmin_sshdir
 
 {% if salt['file.file_exists'](datamap.oneadmin.ssh_pubkey) == False or
 (datamap.oneadmin.regenerate_ssh_keypair|default(False) == True and salt['file.file_exists'](datamap.oneadmin.ssh_pubkey_old) == False) %}
@@ -46,10 +66,11 @@ oneadmin:
 oneadmin_ssh_keypair:
   cmd:
     - run
-    - name: {{ datamap.oneadmin.regenerate_ssh_keypair_cmd|default('ssh-keygen -q -b ' ~ datamap.oneadmin.ssh_bits|default('8192') ~ ' -t rsa -f ' ~ datamap.oneadmin.ssh_prvkey ~' -N ""') }} {# TODO require rng-tools running #}
+    - name: {{ datamap.oneadmin.regenerate_ssh_keypair_cmd|default('ssh-keygen -q -b ' ~ datamap.oneadmin.ssh_bits|default('8192') ~ ' -t rsa -f ' ~ datamap.oneadmin.ssh_prvkey ~' -N "" && cat ' ~ datamap.oneadmin.ssh_pubkey ~ ' >> ' ~ datamap.oneadmin.home ~ '/.ssh/authorized_keys') }}
     - user: {{ datamap.oneadmin.name|default('oneadmin') }}
     - require:
-      - user: {{ datamap.oneadmin.name|default('oneadmin') }}
+      - user: oneadmin
+      - file: oneadmin_sshauthkeys
 {% endif %}
 
 

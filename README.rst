@@ -13,7 +13,8 @@ TODO
 ====
 
 * get ceph-formula working with this formula :) (prepare storage automatically)
-* register new frontend automatically
+* register new storage automatically
+* register new frontends automatically
 * register new nodes automatically
 
 Instructions
