@@ -12,7 +12,9 @@ NOTICE BEFORE YOU USE
 TODO
 ====
 
-* Get ceph-formula working with this formula :)
+* get ceph-formula working with this formula :) (prepare storage automatically)
+* register new frontend automatically
+* register new nodes automatically
 
 Instructions
 ============

@@ -74,3 +74,19 @@ oned_conf:
 {% for r in datamap['f_usoh.recurse']|default(['user', 'group', 'file_mode', 'dir_mode']) %}
       - {{ r }}
 {% endfor %}
+
+{% set f_oa = config.one_auth|default({}) %}
+{% if f_oa.manage|default(False) == True %}
+one_auth:
+  file:
+    - managed
+    - name: {{ f_oa.path|default('/var/lib/one/.one/one_auth') }}
+    - contents_pillar: opennebula:lookup:oned:config:one_auth:content
+    - mode: {{ f_oa.mode|default('600') }}
+    - user: {{ f_oa.user|default('oneadmin') }}
+    - group: {{ f_oa.group|default('oneadmin') }}
+    - require_in:
+      - pkg: oned
+    - require:
+      - sls: opennebula._oneuser
+{% endif %}
