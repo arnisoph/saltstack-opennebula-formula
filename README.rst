@@ -16,6 +16,7 @@ TODO
 * register new storage automatically
 * register new frontends automatically
 * register new nodes automatically
+* modify default templates (e.g. /etc/one/vmm_exec/vmm_exec_kvm.conf: driver=>qcow?)
 
 Instructions
 ============
@@ -66,7 +67,7 @@ Sets OpenNebula Onegate up
 Additional resources
 ====================
 
-* Big thanks to the great work of the guys behind https://github.com/epost-dev/opennebula-puppet-module! They built a very nice looking module for Puppet.
+None
 
 Formula Dependencies
 ====================
