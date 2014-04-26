@@ -17,7 +17,6 @@ TODO
 * register new frontends automatically
 * register new nodes automatically
 * modify default templates (e.g. /etc/one/vmm_exec/vmm_exec_kvm.conf: driver=>qcow?)
-* deploy ssh keys (public) as authorized keys
 * deploy to sunstone host: serveradmin credentials
 
 Instructions
@@ -91,7 +90,7 @@ Salt Compatibility
 
 Tested with:
 
-* 2014.1.1
+* 2014.1.3
 
 OS Compatibility
 ================

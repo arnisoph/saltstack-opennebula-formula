@@ -73,5 +73,19 @@ oneadmin_ssh_keypair:
       - file: oneadmin_sshauthkeys
 {% endif %}
 
-#TODO add ssh key from oneadmin of the oned host
+{% if salt['pillar.get']('opennebula:collect_controller_sshpubkey', False) %}
+  {# TODO: Improve this ASAP. Use a better function to collect the SSH pubkey #}
+  {% set target = salt['pillar.get']('opennebula:salt_controllersshpubkey_searchtarget', '*') %}
+  {% set fun = salt['pillar.get']('opennebula:salt_controllersshpubkey_searchfun', None) %}
+  {% set exprform = salt['pillar.get']('opennebula:salt_controllersshpubkey_searchexprform', 'glob') %}
+
+  {% for host, pubkey in salt['mine.get'](target, fun, exprform).items() %}
+ssh-auth-onecontroller-{{ datamap.oneadmin.name|default('oneadmin') }}-{{ host }}:
+  ssh_auth:
+    - present
+    - name: {{ pubkey }}
+    - user: {{ datamap.oneadmin.name|default('oneadmin') }}
+  {% endfor %}
+{% endif %}
+
 #TODO add known hosts (nodes) to the known_hosts file of the oneadmin user at the oned host

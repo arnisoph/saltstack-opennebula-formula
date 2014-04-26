@@ -33,3 +33,20 @@ opennebula:
             :oneflow_server: http://localhost:2474/
             :routes:
               - oneflow
+
+
+
+{# Collect oneadmin's sshpubkey on the controller and deploy on e.g. compute_node #}
+opennebula:
+  salt_controllersshpubkey_searchtarget: mycontroller.domain.local
+  salt_controllersshpubkey_searchfun: cmd.run_stdout
+  collect_controller_sshpubkey: True
+
+  salt_controllersshpubkey_searchtarget: I@environment:prod and G@roles:opennebula_controller
+  salt_controllersshpubkey_searchfun: cmd.run_stdout
+  salt_controllersshpubkey_searchexprform: compound
+  collect_controller_sshpubkey: True
+
+mine_functions: {# <= yes, this is an arbitrary pillar too! #}
+  cmd.run_stdout:
+    - 'test -r /var/lib/one/.ssh/id_rsa.pub && cat /var/lib/one/.ssh/id_rsa.pub'
