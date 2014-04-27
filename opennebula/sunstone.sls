@@ -18,7 +18,7 @@ sunstone:
     - require:
       - user: oneadmin
   service:
-    - running
+    - {{ service.state|default('running') }}
     - name: {{ service.name|default('opennebula-sunstone') }}
     - enable: {{ service.enable|default(True) }}
     {# TODO: service doesn't have a status command. Is this Debian specifc? #}
