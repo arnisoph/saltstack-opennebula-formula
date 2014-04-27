@@ -22,7 +22,6 @@ oned:
       - file: oned_conf
     - require:
       - sls: opennebula._oneuser
-      - file: oned_conf
       - file: /usr/share/one
       - file: /usr/share/one/hooks
 

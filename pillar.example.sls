@@ -33,6 +33,36 @@ opennebula:
             :oneflow_server: http://localhost:2474/
             :routes:
               - oneflow
+        sunstone_views:
+          manage: True
+          content:
+            logo: images/opennebula-sunstone-v4.0.png
+            available_tabs:
+                - dashboard-tab
+                - system-tab
+                - users-tab
+                - groups-tab
+                - acls-tab
+                - vresources-tab
+                - vms-tab
+                - templates-tab
+                - images-tab
+                - files-tab
+                - infra-tab
+                - clusters-tab
+                - hosts-tab
+                - datastores-tab
+                - vnets-tab
+                - zones-tab
+                - provision-tab
+            groups:
+                oneadmin:
+                    - admin
+                    - vdcadmin
+                    - user
+                    - cloud
+            default:
+                - cloud
 
 
 

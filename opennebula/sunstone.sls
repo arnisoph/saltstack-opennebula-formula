@@ -39,9 +39,21 @@ sunstone_server_conf: {# TODO: move to sunstone ^ ? #}
     - group: {{ f_ss.group|default('root') }}
     - watch_in:
       - service: sunstone
-    - require_in:
-      - service: sunstone
+{% endif %}
 
+{% set f_sv = config.sunstone_views|default({}) %}
+{% if f_sv.manage|default(False) == True %}
+sunstone_views_conf:
+  file:
+    - serialize
+    - name: {{ f_sv.path|default('/etc/one/sunstone-views.yaml') }}
+    - dataset: {{ salt['pillar.get']('opennebula:lookup:sunstone:config:sunstone_views:content', f_sv_config_default) }}
+    - formatter: YAML
+    - mode: {{ f_sv.mode|default('644') }}
+    - user: {{ f_sv.user|default('root') }}
+    - group: {{ f_sv.group|default('root') }}
+    - watch_in:
+      - service: sunstone
 {% endif %}
 
 #{% set f_ulos = config.usr_lib_one_sunstone|default({}) %}
@@ -59,4 +71,3 @@ sunstone_server_conf: {# TODO: move to sunstone ^ ? #}
 # flow/gate:
 #/etc/one/sunstone-server.conf:
 #/etc/one/sunstone-views/admin.yaml:
-#/etc/one/sunstone-views.yaml:
