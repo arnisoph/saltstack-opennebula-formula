@@ -43,10 +43,9 @@ If you want to collect the list of e.g. compute nodes to be added to the static 
 
 Example:
 
-  .. code-block:: yaml
-  peer:
-    opennebula_controller.*\.domain\.local:
-      - grains.get
+    peer:
+      opennebula_controller.*\.domain\.local:
+        - grains.get
 
 You also need to enable the collection of those hosts in your pillars. See pillar.example.sls
 
