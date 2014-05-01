@@ -13,6 +13,10 @@ Debian:
     ssh_prvkey: /var/lib/one/.ssh/id_rsa
     ssh_pubkey_old: /var/lib/one/.ssh/id_rsa.pub.dist
     ssh_prvkey_old: /var/lib/one/.ssh/id_rsa.dist
+    optional_groups:
+      - kvm
+      - libvirt
+      - ssl-cert
   oneadmingroup:
     name: oneadmin
   controller:
@@ -28,6 +32,7 @@ Debian:
   sunstone:
     pkgs:
       - opennebula-sunstone
+      - python-numpy
   oneflow:
     pkgs:
       - opennebula-flow
@@ -36,4 +41,7 @@ Debian:
   onegate:
     pkgs:
       - opennebula-gate
+  novnc:
+    service:
+      name: opennebula-novnc
 {% endload %}

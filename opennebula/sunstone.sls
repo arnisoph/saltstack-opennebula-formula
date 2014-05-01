@@ -30,10 +30,12 @@ sunstone:
 {% if f_ss.manage|default(True) == True %}
 sunstone_server_conf: {# TODO: move to sunstone ^ ? #}
   file:
-    - serialize
+    #- serialize
+    - managed
     - name: {{ f_ss.path|default('/etc/one/sunstone-server.conf') }}
-    - dataset: {{ salt['pillar.get']('opennebula:lookup:sunstone:config:sunstone_server:content', f_ss_config_default) }}
-    - formatter: YAML
+    #- dataset: {# salt['pillar.get']('opennebula:lookup:sunstone:config:sunstone_server:content', f_ss_config_default) #}
+    - contents_pillar: opennebula:lookup:sunstone:config:sunstone_server:content
+    #- formatter: YAML
     - mode: {{ f_ss.mode|default('644') }}
     - user: {{ f_ss.user|default('root') }}
     - group: {{ f_ss.group|default('root') }}
@@ -45,10 +47,12 @@ sunstone_server_conf: {# TODO: move to sunstone ^ ? #}
 {% if f_sv.manage|default(False) == True %}
 sunstone_views_conf:
   file:
-    - serialize
+    - managed
+    #TODO buggy: - serialize
     - name: {{ f_sv.path|default('/etc/one/sunstone-views.yaml') }}
-    - dataset: {{ salt['pillar.get']('opennebula:lookup:sunstone:config:sunstone_views:content', f_sv_config_default) }}
-    - formatter: YAML
+    #- dataset: {# salt['pillar.get']('opennebula:lookup:sunstone:config:sunstone_views:content', f_sv_config_default)|yaml #}
+    - contents_pillar: opennebula:lookup:sunstone:config:sunstone_views:content
+    #- formatter: YAML
     - mode: {{ f_sv.mode|default('644') }}
     - user: {{ f_sv.user|default('root') }}
     - group: {{ f_sv.group|default('root') }}
@@ -68,6 +72,20 @@ sunstone_views_conf:
 #      - {{ r }}
 #{% endfor %}
 
-# flow/gate:
-#/etc/one/sunstone-server.conf:
-#/etc/one/sunstone-views/admin.yaml:
+{% set f_nv = datamap.novnc|default({}) %}
+{% if f_nv.manage|default(True) == True %}
+novnc_servicescript:
+  file:
+    - managed
+    - name: {{ f_nv.service.servicepath|default('/etc/init.d/opennebula-novnc') }}
+    - source: {{ f_nv.service.template_path|default('salt://opennebula/files/novnc/init_novnc') }}
+    - mode: {{ f_nv.mode|default('755') }}
+    - user: {{ f_nv.user|default('root') }}
+    - group: {{ f_nv.group|default('root') }}
+{% endif %}
+
+novnc_service:
+  service:
+    - {{ f_nv.service.state|default('running') }}
+    - name: {{ f_nv.service.name|default('opennebula-novnc') }}
+    - enable: {{ f_nv.service.enable|default(True) }}
