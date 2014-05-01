@@ -87,7 +87,7 @@ ssh-auth-onecontroller-{{ datamap.oneadmin.name|default('oneadmin') }}-{{ host }
 {% endif %}
 
 {% if 'hostspubkey' in salt['pillar.get']('opennebula:salt:collect', []) %}
-  {% set host_pubkeys = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_hostspubkey:tgt', '*'), 'grains.item', ['fqdn'], 'compound')|default([]) %}
+  {% set hosts_pubkeys = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_hostspubkey:tgt', '*'), 'grains.item', ['fqdn'], 'compound')|default({}) %}
 
   {% for k, v in hosts_pubkeys.items() %}
 knownhost-{{ v.fqdn }}:
@@ -102,7 +102,7 @@ knownhost-{{ v.fqdn }}:
 
 {% set f_osc = datamap.oneadmin.sshconfig|default({}) %}
 {% if f_osc.manage|default(False) and 'host_names' in salt['pillar.get']('opennebula:salt:collect', []) %}
-  {% set hosts_names = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_host_names:tgt', '*'), 'grains.item', ['fqdn', 'host'], 'compound')|default([]) %}
+  {% set hosts_names = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_host_names:tgt', '*'), 'grains.item', ['fqdn', 'host'], 'compound')|default({}) %}
 oneadmin_sshconfig:
   file:
     - managed
