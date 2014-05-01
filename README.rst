@@ -43,6 +43,7 @@ If you want to collect the list of e.g. compute nodes to be added to the static 
 
 Example:
 
+.. code-block:: yaml
     peer:
       opennebula_controller.*\.domain\.local:
         - grains.get
