@@ -93,4 +93,4 @@ opennebula:
     collect:
       - hostlist
     collect_hostlist:
-      tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node ) and G@teams:one_nc1 and not G@fqdn:{{ salt['grains.get']('fqdn', 'grainsnotavailableyoushouldfixthat') }}
+      tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node ) and not G@fqdn:{{ salt['grains.get']('fqdn', 'grainsnotavailableyoushouldfixthat') }}

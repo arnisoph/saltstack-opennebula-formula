@@ -61,7 +61,7 @@ Sets OpenNebula daemon up
 
 Sets OpenNebula computing node up
 
-If you want to collect the public ssh key of the controller(s), you need to setup mine functions. See pillar.example.sls
+If you want to collect the public ssh key of the controllers' oneadmin user, you need to setup mine functions. See pillar.example.sls
 
 ``opennebula.sunstone``
 -----------------------
