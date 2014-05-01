@@ -39,7 +39,7 @@ Available states
 
 Installs the official OpenNebula repository
 
-``opennebula.oned``
+``opennebula.controller``
 -------------------
 
 Sets OpenNebula daemon up

@@ -1,17 +1,17 @@
 {% from "opennebula/defaults.yaml" import rawmap with context %}
 {% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
-{% set config = datamap.oned.config|default({}) %}
-{% set service = datamap.oned.service|default({}) %}
+{% set config = datamap.controller.config|default({}) %}
+{% set service = datamap.controller.service|default({}) %}
 
 include:
   - opennebula
   - opennebula._oneuser
 
-oned:
+controller:
   pkg:
     - installed
     - pkgs:
-{% for p in datamap['oned']['pkgs'] %}
+{% for p in datamap.controller.pkgs %}
       - {{ p }}
 {% endfor %}
   service:
@@ -31,9 +31,9 @@ oned:
 #    - wait
 #    - name: {{ datamap.gems_setup.cmd|default('/usr/share/one/install_gems') }}
 #    - watch:
-#      - pkg: oned
+#      - pkg: controller
 #    - require_in:
-#      - service: oned
+#      - service: controller
 {% endif %}
 
 {% set f_o = config.oned_conf|default({}) %}
@@ -46,8 +46,6 @@ oned_conf:
     - mode: {{ f_o.mode|default('640') }}
     - user: {{ f_o.user|default('root') }}
     - group: {{ f_o.group|default('oneadmin') }}
-    - require:
-      - pkg: oned
 
 {% set f_uso = config.usr_share_one|default({}) %}
 /usr/share/one:
@@ -80,12 +78,12 @@ one_auth:
   file:
     - managed
     - name: {{ f_oa.path|default('/var/lib/one/.one/one_auth') }}
-    - contents_pillar: opennebula:lookup:oned:config:one_auth:content
+    - contents_pillar: opennebula:lookup:controller:config:one_auth:content
     - mode: {{ f_oa.mode|default('600') }}
     - user: {{ f_oa.user|default('oneadmin') }}
     - group: {{ f_oa.group|default('oneadmin') }}
     - require_in:
-      - pkg: oned
+      - pkg: controller
     - require:
       - sls: opennebula._oneuser
 {% endif %}

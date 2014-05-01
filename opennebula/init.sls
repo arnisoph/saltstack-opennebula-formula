@@ -16,7 +16,7 @@ opennebula_repo: {# TODO: whack the hack #}
 #  pkg:
 #    - installed
 #    - pkgs:
-#{% for p in datamap['oned']['pkgs'] %}
+#{% for p in datamap['controller']['pkgs'] %}
 #      - {{ p }}
 #{% endfor %}
 

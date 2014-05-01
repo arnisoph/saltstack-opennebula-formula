@@ -4,7 +4,7 @@
 
 include:
   - opennebula
-  - opennebula.oned
+  - opennebula.controller
   - opennebula._oneuser
 
 oneflow:
@@ -15,7 +15,7 @@ oneflow:
       - {{ p }}
 {% endfor %}
     - require:
-      - service: oned
+      - service: controller
   #TODO: use init script (http://dev.opennebula.org/issues/2183)
   #service:
     #- running

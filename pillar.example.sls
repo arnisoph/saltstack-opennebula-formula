@@ -1,6 +1,6 @@
 opennebula:
   lookup:
-    oned:
+    controller:
       config:
         oned_conf:
           template_path: False
