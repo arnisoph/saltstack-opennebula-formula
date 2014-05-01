@@ -20,9 +20,7 @@ opennebula_repo: {# TODO: whack the hack #}
 #      - {{ p }}
 #{% endfor %}
 
-#File /var/lib/one
-#File /var/lib/one/.ssh
-#Service dbus
+#Service dbus?
 
 {% if 'hostlist' in salt['pillar.get']('opennebula:salt:collect', []) %}
   {% set hosts = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_hostlist:tgt', '*'), 'grains.get', ['fqdn'], 'compound') %}

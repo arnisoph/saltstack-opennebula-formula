@@ -86,4 +86,16 @@ ssh-auth-onecontroller-{{ datamap.oneadmin.name|default('oneadmin') }}-{{ host }
   {% endfor %}
 {% endif %}
 
-#TODO add known hosts (nodes) to the known_hosts file of the oneadmin user at the oned host
+{% if 'hostspubkey' in salt['pillar.get']('opennebula:salt:collect', []) %}
+  {% set hosts = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_hostspubkey:tgt', '*'), 'grains.get', ['fqdn'], 'compound') %}
+
+  {% for h in hosts %}
+knownhost-{{ h }}:
+  ssh_known_hosts:
+    - present
+    - name: {{ h }}
+    - user: {{ datamap.oneadmin.name|default('oneadmin') }}
+    #- port: {# TODO ssh port #}
+    #- enc: {# TODO key enc type #}
+  {% endfor %}
+{% endif %}

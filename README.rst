@@ -39,18 +39,6 @@ Available states
 
 Installs the official OpenNebula repository
 
-If you want to collect the list of e.g. compute nodes to be added to the static name lookup table (``/etc/hosts`` or other), you need to setup peer communication on your master:
-
-Example:
-
-.. code:: yaml
-
-    peer:
-      opennebula_controller.*\.domain\.local:
-        - grains.get
-
-You also need to enable the collection of those hosts in your pillars. See pillar.example.sls
-
 ``opennebula.oned``
 -------------------
 
@@ -60,8 +48,6 @@ Sets OpenNebula daemon up
 ---------------------------
 
 Sets OpenNebula computing node up
-
-If you want to collect the public ssh key of the controllers' oneadmin user, you need to setup mine functions. See pillar.example.sls
 
 ``opennebula.sunstone``
 -----------------------
@@ -81,7 +67,32 @@ Sets OpenNebula Onegate up
 Additional resources
 ====================
 
-None
+``Collecting ssh host keys``
+----------------------------
+
+If you want to collect the public ssh host key of the controller, you need to setup peer communication on your master (see ``Collecting hostnames for static name lookup``) and pillars. See pillar.example.sls
+
+**WARNING**: There's currently no mechanism to purge old and unused host keys. There's also no check in the case host keys have changed. This is a potential security risk! Use it carefully!
+
+``Collecting oneadmin's (ONE frontend) ssh public key``
+-------------------------------------------------------
+
+If you want to collect the public ssh key of the controllers' oneadmin user, you need to setup mine functions and pillars. See pillar.example.sls
+
+``Collecting hostnames for static name lookup``
+-----------------------------------------------
+
+If you want to collect the list of e.g. compute nodes to be added to the static name lookup table (``/etc/hosts`` or other), you need to setup peer communication on your master:
+
+Example:
+
+.. code:: yaml
+
+    peer:
+      opennebula_controller.*\.domain\.local:
+        - grains.get
+
+You also need to enable the collection of those hosts in your pillars. See pillar.example.sls
 
 Formula Dependencies
 ====================

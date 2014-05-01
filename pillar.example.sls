@@ -94,3 +94,11 @@ opennebula:
       - hostlist
     collect_hostlist:
       tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node ) and not G@fqdn:{{ salt['grains.get']('fqdn', 'grainsnotavailableyoushouldfixthat') }}
+
+{# Collect host list and their SSH host keys to oneadmin's known_host list #}
+opennebula:
+  salt:
+    collect:
+      - hostspubkey
+    collect_hostspubkey:
+      tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node )
