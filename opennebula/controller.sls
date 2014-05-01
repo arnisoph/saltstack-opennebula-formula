@@ -47,6 +47,20 @@ oned_conf:
     - user: {{ f_o.user|default('root') }}
     - group: {{ f_o.group|default('oneadmin') }}
 
+{% set f_ovek = config.one_vmm_exec_kvm|default({}) %}
+{% if f_ovek.manage|default(False) == True %}
+one_vmm_exec_kvm:
+  file:
+    - managed
+    - name: {{ f_ovek.path|default('/etc/one/vmm_exec/vmm_exec_kvm.conf') }}
+    - source: {{ f_ovek.template_path|default('salt://opennebula/files/vmm_exec/vmm_exec_kvm.conf') }}
+    - mode: {{ f_ovek.mode|default('644') }}
+    - user: {{ f_ovek.user|default('root') }}
+    - group: {{ f_ovek.group|default('root') }}
+    - watch_in:
+      - service: controller
+{% endif %}
+
 {% set f_uso = config.usr_share_one|default({}) %}
 /usr/share/one:
   file:
