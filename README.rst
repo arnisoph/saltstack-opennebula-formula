@@ -67,20 +67,20 @@ Sets OpenNebula Onegate up
 Additional resources
 ====================
 
-``Collecting ssh host keys``
-----------------------------
+Collecting ssh host keys
+------------------------
 
 If you want to collect the public ssh host key of the controller, you need to setup peer communication on your master (see ``Collecting hostnames for static name lookup``) and pillars. See pillar.example.sls
 
 **WARNING**: There's currently no mechanism to purge old and unused host keys. There's also no check in the case host keys have changed. This is a potential security risk! Use it carefully!
 
-``Collecting oneadmin's (ONE frontend) ssh public key``
--------------------------------------------------------
+Collecting oneadmin's (ONE frontend) ssh public key
+---------------------------------------------------
 
 If you want to collect the public ssh key of the controllers' oneadmin user, you need to setup mine functions and pillars. See pillar.example.sls
 
-``Collecting hostnames for static name lookup``
------------------------------------------------
+Collecting hostnames for static name lookup
+-------------------------------------------
 
 If you want to collect the list of e.g. compute nodes to be added to the static name lookup table (``/etc/hosts`` or other), you need to setup peer communication on your master:
 
