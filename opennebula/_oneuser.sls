@@ -73,13 +73,11 @@ oneadmin_ssh_keypair:
       - file: oneadmin_sshauthkeys
 {% endif %}
 
-{% if salt['pillar.get']('opennebula:collect_controller_sshpubkey', False) %}
-  {# TODO: Improve this ASAP. Use a better function to collect the SSH pubkey #}
-  {% set target = salt['pillar.get']('opennebula:salt_controllersshpubkey_searchtarget', '*') %}
-  {% set fun = salt['pillar.get']('opennebula:salt_controllersshpubkey_searchfun', None) %}
-  {% set exprform = salt['pillar.get']('opennebula:salt_controllersshpubkey_searchexprform', 'glob') %}
+{% if 'controller_sshpubkey' in salt['pillar.get']('opennebula:salt:collect', []) %}
+  {# TODO: Improve this ASAP. Use a better function to collect the SSH pubkey: ssh.user_keys #}
+  {% set d = salt['pillar.get']('opennebula:salt:collect_controller_sshpubkey', None) %}
 
-  {% for host, pubkey in salt['mine.get'](target, fun, exprform).items() %}
+  {% for host, pubkey in salt['mine.get'](d.tgt, d.fun, d.exprform|default('glob')).items() %}
 ssh-auth-onecontroller-{{ datamap.oneadmin.name|default('oneadmin') }}-{{ host }}:
   ssh_auth:
     - present

@@ -68,15 +68,29 @@ opennebula:
 
 {# Collect oneadmin's sshpubkey on the controller and deploy on e.g. compute_node #}
 opennebula:
-  salt_controllersshpubkey_searchtarget: mycontroller.domain.local
-  salt_controllersshpubkey_searchfun: cmd.run_stdout
-  collect_controller_sshpubkey: True
+  salt:
+    collect:
+      - controller_sshpubkey
 
-  salt_controllersshpubkey_searchtarget: I@environment:prod and G@roles:opennebula_controller
-  salt_controllersshpubkey_searchfun: cmd.run_stdout
-  salt_controllersshpubkey_searchexprform: compound
-  collect_controller_sshpubkey: True
+    {# A specific host #}
+    collect_controller_sshpubkey:
+      tgt: mycontroller.domain.local
+      fun: cmd.run_stdout
+
+    {# A set of specfic hosts #}
+    collect_controller_sshpubkey:
+      tgt: I@environment:prod and G@roles:opennebula_controller
+      fun: cmd.run_stdout
+      exprform: compound
 
 mine_functions: {# <= yes, this is an arbitrary pillar too! #}
   cmd.run_stdout:
     - 'test -r /var/lib/one/.ssh/id_rsa.pub && cat /var/lib/one/.ssh/id_rsa.pub'
+
+{# Collect host list to set static host lookup (/etc/hosts) #}
+opennebula:
+  salt:
+    collect:
+      - hostlist
+    collect_hostlist:
+      tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node ) and G@teams:one_nc1 and not G@fqdn:{{ salt['grains.get']('fqdn', 'grainsnotavailableyoushouldfixthat') }}

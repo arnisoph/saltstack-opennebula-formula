@@ -24,7 +24,7 @@ Instructions
 
 1. Add this repository as a `GitFS <http://docs.saltstack.com/topics/tutorials/gitfs.html>`_ backend in your Salt master config.
 
-2. Configure your Pillar top file (``/srv/pillar/top.sls``), see pillar.example
+2. Configure your Pillar top file (``/srv/pillar/top.sls``), see pillar.example.sls
 
 3. Include this Formula within another Formula or simply define your needed states within the Salt top file (``/srv/salt/top.sls``).
 
@@ -39,6 +39,17 @@ Available states
 
 Installs the official OpenNebula repository
 
+If you want to collect the list of e.g. compute nodes to be added to the static name lookup table (``/etc/hosts`` or other), you need to setup peer communication on your master:
+
+Example:
+
+  .. code-block:: yaml
+  peer:
+    opennebula_controller.*\.domain\.local:
+      - grains.get
+
+You also need to enable the collection of those hosts in your pillars. See pillar.example.sls
+
 ``opennebula.oned``
 -------------------
 
@@ -49,6 +60,7 @@ Sets OpenNebula daemon up
 
 Sets OpenNebula computing node up
 
+If you want to collect the public ssh key of the controller(s), you need to setup mine functions. See pillar.example.sls
 
 ``opennebula.sunstone``
 -----------------------
