@@ -23,15 +23,15 @@ opennebula_repo: {# TODO: whack the hack #}
 #Service dbus?
 
 {% if 'hostlist' in salt['pillar.get']('opennebula:salt:collect', []) %}
-  {% set hosts = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_hostlist:tgt', '*'), 'grains.get', ['fqdn'], 'compound') %}
+  {% set hosts = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_hostlist:tgt', '*'), 'grains.item', ['fqdn'], 'compound') %}
 
-  {% for h in hosts %}
+  {% for k, v in hosts.items() %}
     {# TODO: support IPv6 #}
-    {% set ipaddr = salt['dig.A'](h)|first %} {# This will conflict with Round Robin A records #}
-host-{{ h }}_{{ ipaddr }}:
+    {% set ipaddr = salt['dig.A'](v.fqdn)|first %} {# This will conflict with Round Robin A records #}
+host-{{ v.fqdn }}_{{ ipaddr }}:
   host:
     - present
     - ip: {{ ipaddr }}
-    - name: {{ h }}
+    - name: {{ v.fqdn }}
   {% endfor %}
 {% endif %}

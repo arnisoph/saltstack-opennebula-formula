@@ -48,7 +48,7 @@ oned_conf:
     - group: {{ f_o.group|default('oneadmin') }}
 
 {% set f_ovek = config.one_vmm_exec_kvm|default({}) %}
-{% if f_ovek.manage|default(False) == True %}
+{% if f_ovek.manage|default(False) %}
 one_vmm_exec_kvm:
   file:
     - managed
@@ -87,7 +87,7 @@ one_vmm_exec_kvm:
 {% endfor %}
 
 {% set f_oa = config.one_auth|default({}) %}
-{% if f_oa.manage|default(False) == True %}
+{% if f_oa.manage|default(False) %}
 one_auth:
   file:
     - managed

@@ -102,3 +102,15 @@ opennebula:
       - hostspubkey
     collect_hostspubkey:
       tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node )
+
+{# Manage ssh configuration of oneadmin user #}
+opennebula:
+  lookup:
+    oneadmin:
+      sshconfig:
+        manage: True
+  salt:
+    collect:
+      - host_names
+    collect_host_names:
+      tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node ) and G@teams:one_nc1

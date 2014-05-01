@@ -74,6 +74,11 @@ If you want to collect the public ssh host key of the controller, you need to se
 
 **WARNING**: There's currently no mechanism to purge old and unused host keys. There's also no check in the case host keys have changed. This is a potential security risk! Use it carefully!
 
+Managing ssh configuration of oneadmin user
+-------------------------------------------
+
+If you want to configure oneadmin's ssh configuration file ~/.ssh/config, you need to setup peer communication on your master (see ``Collecting hostnames for static name lookup``) and pillars. See pillar.example.sls
+
 Collecting oneadmin's (ONE frontend) ssh public key
 ---------------------------------------------------
 
@@ -90,7 +95,7 @@ Example:
 
     peer:
       opennebula_controller.*\.domain\.local:
-        - grains.get
+        - grains.item
 
 You also need to enable the collection of those hosts in your pillars. See pillar.example.sls
 
