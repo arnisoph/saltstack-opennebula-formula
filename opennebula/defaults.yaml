@@ -27,8 +27,6 @@ Debian:
   compute_node:
     pkgs:
       - opennebula-node
-      #- sudo {# TODO <- ? #}
-      #- virtinst {# TODO <- ? #}
   sunstone:
     pkgs:
       - opennebula-sunstone
