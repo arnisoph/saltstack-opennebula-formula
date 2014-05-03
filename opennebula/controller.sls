@@ -76,6 +76,7 @@ one_vmm_exec_kvm:
     - recurse
     - name: {{ f_usoh.path|default('/usr/share/one/hooks') }}
     - source: {{ f_usoh.source|default('salt://opennebula/files/hookscripts') }}
+    - exclude_pat: .gitignore
     - file_mode: {{ f_usoh.file_mode|default('750') }}
     - dir_mode: {{ f_usoh.dir_mode|default('750') }}
     - user: {{ f_usoh.user|default('oneadmin') }}
