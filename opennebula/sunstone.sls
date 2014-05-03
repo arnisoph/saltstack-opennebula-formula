@@ -7,7 +7,7 @@
 include:
   - opennebula
   - opennebula._oneuser
-{% for si in salt['pillar.get']('opennebula:lookup:sunstone:sls_include', []) %}
+{% for si in salt['pillar.get']('opennebula:lookup:sunstone:sls_include', '[]') %}
   - {{ si }}
 {% endfor %}
 
