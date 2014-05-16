@@ -9,6 +9,10 @@ opennebula_repo: {# TODO: whack the hack #}
     - name: deb {{ datamap.repo.url }} {{ datamap.repo.dist }} {{ datamap.repo.comps }}
     - file: /etc/apt/sources.list.d/opennebula.list
     - key_url: {{ datamap.repo.keyurl }}
+  {% elif salt['grains.get']('os_family') == 'RedHat' %}
+    - humanname: OpenNebula
+    - baseurl: {{ datamap.repo.url }}
+    - gpgcheck: 0
   {% endif %}
 {% endif %}
 

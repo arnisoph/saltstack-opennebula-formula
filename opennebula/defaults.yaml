@@ -42,4 +42,44 @@ Debian:
   novnc:
     service:
       name: opennebula-novnc
+RedHat:
+  repo:
+    url: http://downloads.opennebula.org/repo/{{ salt['grains.get']('os') }}/$releasever/stable/$basearch
+  gems_setup:
+    enabled: True
+  oneadmin:
+    home: /var/lib/one
+    ssh_pubkey: /var/lib/one/.ssh/id_rsa.pub
+    ssh_prvkey: /var/lib/one/.ssh/id_rsa
+    ssh_pubkey_old: /var/lib/one/.ssh/id_rsa.pub.dist
+    ssh_prvkey_old: /var/lib/one/.ssh/id_rsa.dist
+    optional_groups:
+      - kvm
+      - libvirt
+      - ssl-cert
+  oneadmingroup:
+    name: oneadmin
+  controller:
+    pkgs:
+      - opennebula
+      - opennebula-tools
+      #- ruby-opennebula {# TODO <- ? #}
+  compute_node:
+    pkgs:
+      - opennebula-node-kvm
+  sunstone:
+    pkgs:
+      - opennebula-sunstone
+      - python-numpy
+  oneflow:
+    pkgs:
+      - opennebula-flow
+      - ruby-treetop
+      - ruby-polyglot
+  onegate:
+    pkgs:
+      - opennebula-gate
+  novnc:
+    service:
+      name: opennebula-novnc
 {% endload %}
