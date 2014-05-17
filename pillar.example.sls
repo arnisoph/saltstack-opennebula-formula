@@ -63,7 +63,13 @@ opennebula:
                     - cloud
             default:
                 - cloud
-
+  datastores:
+    - name: /var/lib/one/datastores/1
+      type: nfs
+      source: mycontroller.domain.local:/var/lib/one/datastores/1
+    - name: /var/lib/one/datastores/2
+      type: nfs
+      source: mycontroller.domain.local:/var/lib/one/datastores/2
 
 
 {# Collect oneadmin's sshpubkey on the controller and deploy on e.g. compute_node #}

@@ -4,6 +4,7 @@
 include:
   - opennebula
   - opennebula._oneuser
+  - opennebula._datastores
 
 compute_node:
   pkg:
