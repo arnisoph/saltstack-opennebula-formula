@@ -14,7 +14,7 @@ include:
     - mode: {{ d.dirmode|default('755') }}
     - user: {{ d.user|default('oneadmin') }}
     - group: {{ d.group|default('oneadmin') }}
-    - recurse: {{ d.dirrecurse|default([]) }}
+    - makedirs: {{ d.makedirs|default(True) }}
   mount:
     - mounted
     - name: {{ d.name }}
