@@ -20,7 +20,7 @@ include:
     - name: {{ d.name }}
     - device: {{ d.source }}
     - fstype: {{ d.type }}
-    - opts: {{ d.mount_opts|default('auto') }}
+    - opts: {{ d.opts|default('auto') }}
     - persist: {{ d.persist|default(True) }}
   {% endif %}
 {% endfor %}

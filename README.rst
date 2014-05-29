@@ -39,7 +39,7 @@ Available states
 Installs the official OpenNebula repository
 
 ``opennebula.controller``
--------------------
+-------------------------
 
 Sets OpenNebula daemon up
 
@@ -118,7 +118,6 @@ Salt Compatibility
 
 Tested with:
 
-* 2014.1.3
 * 2014.1.4
 
 OS Compatibility
@@ -126,5 +125,5 @@ OS Compatibility
 
 Tested with:
 
-* GNU/ Linux Debian Wheezy 7.5
-* CentOS 6.5 (partly)
+* GNU/ Linux Debian Wheezy 7
+* CentOS 6 (partly)
