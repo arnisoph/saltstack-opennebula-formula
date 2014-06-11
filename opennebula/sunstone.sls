@@ -1,5 +1,8 @@
+#!jinja|yaml
+
 {% from "opennebula/defaults.yaml" import rawmap with context %}
 {% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
+
 {% from "opennebula/files/sunstone/server.yaml" import f_ss_config_default with context %}
 {% set config = datamap.sunstone.config|default({}) %}
 {% set service = datamap.sunstone.service|default({}) %}

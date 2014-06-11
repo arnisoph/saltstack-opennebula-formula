@@ -1,5 +1,8 @@
+#!jinja|yaml
+
 {% from "opennebula/defaults.yaml" import rawmap with context %}
 {% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
+
 {% set service = datamap.oneflow.service|default({}) %}
 
 include:
