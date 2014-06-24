@@ -8,7 +8,7 @@
 include:
   - opennebula
   - opennebula.controller
-  - opennebula._oneuser
+  - opennebula._user_oneadmin
 
 oneflow:
   pkg:

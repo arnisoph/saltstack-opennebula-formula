@@ -5,7 +5,7 @@
 
 include:
   - opennebula
-  - opennebula._oneuser
+  - opennebula._user_oneadmin
 
 {% for d in salt['pillar.get']('opennebula:datastores', []) %}
   {% if d.type == 'nfs' %}

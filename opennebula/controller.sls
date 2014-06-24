@@ -8,7 +8,7 @@
 
 include:
   - opennebula
-  - opennebula._oneuser
+  - opennebula._user_oneadmin
 
 controller:
   pkg:

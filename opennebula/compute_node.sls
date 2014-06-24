@@ -5,7 +5,7 @@
 
 include:
   - opennebula
-  - opennebula._oneuser
+  - opennebula._user_oneadmin
   - opennebula._datastores
 
 compute_node:

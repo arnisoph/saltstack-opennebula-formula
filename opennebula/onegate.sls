@@ -7,7 +7,7 @@
 include:
   - opennebula
   - opennebula.controller
-  - opennebula._oneuser
+  - opennebula._user_oneadmin
 
 onegate:
   pkg:
