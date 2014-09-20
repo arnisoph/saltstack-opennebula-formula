@@ -73,12 +73,18 @@ oneadmin_ssh_keypair:
       - file: oneadmin_sshauthkeys
 {% endif %}
 
-{% if 'controller_sshpubkey' in salt['pillar.get']('opennebula:salt:collect', []) %}
-  {# TODO: Improve this ASAP. Use a better function to collect the SSH pubkey: ssh.user_keys #}
-  {% set d = salt['pillar.get']('opennebula:salt:collect_controller_sshpubkey', None) %}
+{% if datamap.oneadmin.deploy_controller_sshpubkeys|default(True) %}
 
-  {% for host, pubkey in salt['mine.get'](d.tgt, d.fun, d.exprform|default('glob')).items() %}
-ssh-auth-onecontroller-{{ datamap.oneadmin.name|default('oneadmin') }}-{{ host }}:
+  {% if 'controller_sshpubkey' in salt['pillar.get']('opennebula:salt:collect', []) %}
+    {# TODO: Improve this ASAP. Use a better function to collect the SSH pubkey: ssh.user_keys #}
+    {% set d = salt['pillar.get']('opennebula:salt:collect_controller_sshpubkey', None) %}
+    {% set controllers = salt['mine.get'](d.tgt, d.fun, d.exprform|default('glob')) %}
+  {% else %}
+    {% set controllers = datamap.oneadmin.controller_sshpubkeys|default({}) %}
+  {% endif %}
+
+  {% for host, pubkey in controllers|dictsort %}
+ssh_auth_onecontroller_{{ datamap.oneadmin.name|default('oneadmin') }}_{{ host }}_{{ pubkey[-20:] }}:
   ssh_auth:
     - present
     - name: {{ pubkey }}
@@ -90,7 +96,7 @@ ssh-auth-onecontroller-{{ datamap.oneadmin.name|default('oneadmin') }}-{{ host }
   {% set hosts_pubkeys = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_hostspubkey:tgt', '*'), 'grains.item', ['fqdn'], 'compound')|default({}) %}
 
   {% for k, v in hosts_pubkeys.items() %}
-knownhost-{{ v.fqdn }}:
+knownhost_{{ v.fqdn }}:
   ssh_known_hosts:
     - present
     - name: {{ v.fqdn }}

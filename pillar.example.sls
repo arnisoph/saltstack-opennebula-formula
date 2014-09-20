@@ -89,6 +89,14 @@ opennebula:
       fun: cmd.run_stdout
       exprform: compound
 
+{# ... or specifiy oneadmin's sshpubkey manually #}
+oneadmin:
+  lookup:
+    oneadmin:
+      controller_sshpubkeys:
+        mycontroller: AAAAB3NzaC1yc2EAAA..
+
+
 mine_functions: {# <= yes, this is an arbitrary pillar too! #}
   cmd.run_stdout:
     - 'test -r /var/lib/one/.ssh/id_rsa.pub && cat /var/lib/one/.ssh/id_rsa.pub'

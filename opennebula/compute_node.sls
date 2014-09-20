@@ -11,10 +11,7 @@ include:
 compute_node:
   pkg:
     - installed
-    - pkgs:
-{% for p in datamap['compute_node']['pkgs'] %}
-      - {{ p }}
-{% endfor %}
+    - pkgs: {{ datamap.compute_node.pkgs }}
 
 #TODO: require libvirt config + service
 
