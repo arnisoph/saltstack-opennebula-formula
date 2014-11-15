@@ -20,6 +20,7 @@ TODO
 * register new frontends automatically
 * register new nodes automatically
 * deploy to sunstone host: serveradmin credentials
+* ``chown oneadmin. /var/lib/libvirt/qemu``
 
 Instructions
 ============
