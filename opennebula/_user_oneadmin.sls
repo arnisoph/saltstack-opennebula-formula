@@ -53,17 +53,9 @@ oneadmin_sshauthkeys:
     - require:
       - file: oneadmin_sshdir
 
-{% if salt['file.file_exists'](datamap.oneadmin.ssh_pubkey) == False or
-(datamap.oneadmin.regenerate_ssh_keypair|default(False) == True and salt['file.file_exists'](datamap.oneadmin.ssh_pubkey_old) == False) %}
+{% if datamap.oneadmin.regenerate_ssh_keypair|default(False) %}
 
-  {% if salt['file.file_exists'](datamap.oneadmin.ssh_pubkey) == True %}
-    {% do salt['file.rename'](datamap.oneadmin.ssh_pubkey, datamap.oneadmin.ssh_pubkey_old) %}
-    {% do salt['file.rename'](datamap.oneadmin.ssh_prvkey, datamap.oneadmin.ssh_prvkey_old) %}
-    {% do salt['file.set_mode'](datamap.oneadmin.ssh_prvkey_old, '600') %}
-    {% do salt['file.set_mode'](datamap.oneadmin.ssh_pubkey_old, '644') %}
-  {% endif %}
-
-oneadmin_ssh_keypair:
+oneadmin_ssh_keypair: #TODO check this:
   cmd:
     - run
     - name: {{ datamap.oneadmin.regenerate_ssh_keypair_cmd|default('ssh-keygen -q -b ' ~ datamap.oneadmin.ssh_bits|default('8192') ~ ' -t rsa -f ' ~ datamap.oneadmin.ssh_prvkey ~' -N "" && cat ' ~ datamap.oneadmin.ssh_pubkey ~ ' >> ' ~ datamap.oneadmin.home ~ '/.ssh/authorized_keys') }}

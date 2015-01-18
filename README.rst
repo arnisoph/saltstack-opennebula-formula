@@ -131,3 +131,10 @@ Tested with:
 
 * GNU/ Linux Debian Wheezy 7
 * CentOS 6 (partly)
+
+AUTHORS
+-------
+
+Please add yourself too when contributing (sorted alphabetically)!
+
+* Arnold Bechtoldt <mail@arnoldbechtoldt.com>

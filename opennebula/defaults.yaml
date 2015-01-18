@@ -1,18 +1,11 @@
 {% load_yaml as rawmap %}
 Debian:
-  repo:
-    url: http://downloads.opennebula.org/repo/Debian/7
-    dist: stable
-    comps: opennebula
-    keyurl: http://downloads.opennebula.org/repo/Debian/repo.key
   gems_setup:
     enabled: True
   oneadmin:
     home: /var/lib/one
-    ssh_pubkey: /var/lib/one/.ssh/id_rsa.pub
-    ssh_prvkey: /var/lib/one/.ssh/id_rsa
-    ssh_pubkey_old: /var/lib/one/.ssh/id_rsa.pub.dist
-    ssh_prvkey_old: /var/lib/one/.ssh/id_rsa.dist
+    ssh_pubkey: /var/lib/one/.ssh/id_rsa_on.pub
+    ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
     optional_groups:
       - kvm
       - libvirt
@@ -31,6 +24,12 @@ Debian:
     pkgs:
       - opennebula-sunstone
       - python-numpy
+    config:
+      sunstone_server:
+        path: /etc/one/sunstone-server.conf
+      sunstone_views:
+        path: /etc/one/sunstone-views.yaml
+    service: {}
   oneflow:
     pkgs:
       - opennebula-flow
@@ -40,19 +39,14 @@ Debian:
     pkgs:
       - opennebula-gate
   novnc:
-    service:
-      name: opennebula-novnc
+    service: {}
 RedHat:
-  repo:
-    url: http://downloads.opennebula.org/repo/{{ salt['grains.get']('os') }}/$releasever/stable/$basearch
   gems_setup:
     enabled: True
   oneadmin:
     home: /var/lib/one
-    ssh_pubkey: /var/lib/one/.ssh/id_rsa.pub
-    ssh_prvkey: /var/lib/one/.ssh/id_rsa
-    ssh_pubkey_old: /var/lib/one/.ssh/id_rsa.pub.dist
-    ssh_prvkey_old: /var/lib/one/.ssh/id_rsa.dist
+    ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
+    ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
     optional_groups:
       - kvm
       - libvirt
@@ -71,6 +65,7 @@ RedHat:
     pkgs:
       - opennebula-sunstone
       - python-numpy
+    service: {}
   oneflow:
     pkgs:
       - opennebula-flow
@@ -80,6 +75,5 @@ RedHat:
     pkgs:
       - opennebula-gate
   novnc:
-    service:
-      name: opennebula-novnc
+    service: {}
 {% endload %}

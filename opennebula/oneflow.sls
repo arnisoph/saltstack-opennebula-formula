@@ -13,10 +13,7 @@ include:
 oneflow:
   pkg:
     - installed
-    - pkgs:
-{% for p in datamap['oneflow']['pkgs'] %}
-      - {{ p }}
-{% endfor %}
+    - pkgs: {{ datamap.oneflow.pkgs }}
     - require:
       - service: controller
   #TODO: use init script (http://dev.opennebula.org/issues/2183)

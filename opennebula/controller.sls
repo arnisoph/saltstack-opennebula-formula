@@ -13,10 +13,7 @@ include:
 controller:
   pkg:
     - installed
-    - pkgs:
-{% for p in datamap.controller.pkgs %}
-      - {{ p }}
-{% endfor %}
+    - pkgs: {{ datamap.controller.pkgs }}
   service:
     - running
     - name: {{ service.name|default('opennebula') }}
@@ -24,7 +21,7 @@ controller:
     - watch:
       - file: oned_conf
     - require:
-      - sls: opennebula._oneuser
+      - sls: opennebula._user_oneadmin
       - file: /usr/share/one
       - file: /usr/share/one/hooks
 
@@ -46,9 +43,9 @@ oned_conf:
     - name: {{ f_o.path|default('/etc/one/oned.conf') }}
     - source: {{ f_o.template_path|default('salt://opennebula/files/oned.conf') }}
     - template: {{ f_o.template_renderer|default('jinja') }}
-    - mode: {{ f_o.mode|default('640') }}
     - user: {{ f_o.user|default('root') }}
     - group: {{ f_o.group|default('oneadmin') }}
+    - mode: {{ f_o.mode|default('640') }}
 
 {% set f_ovek = config.one_vmm_exec_kvm|default({}) %}
 {% if f_ovek.manage|default(False) %}
@@ -57,9 +54,9 @@ one_vmm_exec_kvm:
     - managed
     - name: {{ f_ovek.path|default('/etc/one/vmm_exec/vmm_exec_kvm.conf') }}
     - source: {{ f_ovek.template_path|default('salt://opennebula/files/vmm_exec/vmm_exec_kvm.conf') }}
-    - mode: {{ f_ovek.mode|default('644') }}
     - user: {{ f_ovek.user|default('root') }}
     - group: {{ f_ovek.group|default('root') }}
+    - mode: {{ f_ovek.mode|default('644') }}
     - watch_in:
       - service: controller
 {% endif %}
@@ -69,9 +66,9 @@ one_vmm_exec_kvm:
   file:
     - directory
     - name: {{ f_uso.path|default('/usr/share/one') }}
-    - mode: {{ f_uso.mode|default('755') }}
     - user: {{ f_uso.user|default('oneadmin') }}
     - group: {{ f_uso.group|default('oneadmin') }}
+    - mode: {{ f_uso.mode|default('755') }}
 
 {% set f_usoh = config.usr_share_one_hooks|default({}) %}
 /usr/share/one/hooks:
@@ -79,16 +76,13 @@ one_vmm_exec_kvm:
     - recurse
     - name: {{ f_usoh.path|default('/usr/share/one/hooks') }}
     - source: {{ f_usoh.source|default('salt://opennebula/files/hookscripts') }}
-    - exclude_pat: .gitignore
-    - file_mode: {{ f_usoh.file_mode|default('750') }}
-    - dir_mode: {{ f_usoh.dir_mode|default('750') }}
     - user: {{ f_usoh.user|default('oneadmin') }}
     - group: {{ f_usoh.group|default('oneadmin') }}
+    - file_mode: {{ f_usoh.file_mode|default('750') }}
+    - dir_mode: {{ f_usoh.dir_mode|default('750') }}
     - clean: {{ f_usoh.clean|default(True) }}
-    - recurse:
-{% for r in datamap['f_usoh.recurse']|default(['user', 'group', 'file_mode', 'dir_mode']) %}
-      - {{ r }}
-{% endfor %}
+    - exclude_pat: .gitignore
+    - recurse: {{ datamap['f_usoh.recurse']|default(['user', 'group', 'file_mode', 'dir_mode']) }}
 
 {% set f_oa = config.one_auth|default({}) %}
 {% if f_oa.manage|default(False) %}
@@ -97,11 +91,11 @@ one_auth:
     - managed
     - name: {{ f_oa.path|default('/var/lib/one/.one/one_auth') }}
     - contents_pillar: opennebula:lookup:controller:config:one_auth:content
-    - mode: {{ f_oa.mode|default('600') }}
     - user: {{ f_oa.user|default('oneadmin') }}
     - group: {{ f_oa.group|default('oneadmin') }}
+    - mode: {{ f_oa.mode|default('600') }}
     - require_in:
       - pkg: controller
     - require:
-      - sls: opennebula._oneuser
+      - sls: opennebula._user_oneadmin
 {% endif %}

@@ -3,70 +3,47 @@
 {% from "opennebula/defaults.yaml" import rawmap with context %}
 {% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
 
-{% from "opennebula/files/sunstone/server.yaml" import f_ss_config_default with context %}
 {% set config = datamap.sunstone.config|default({}) %}
 {% set service = datamap.sunstone.service|default({}) %}
 
-include:
-  - opennebula
-  - opennebula._user_oneadmin
-{% for si in salt['pillar.get']('opennebula:lookup:sunstone:sls_include', []) %}
-  - {{ si }}
-{% endfor %}
-
+include: {{ salt['pillar.get']('opennebula:lookup:sunstone:sls_include', ['opennebula', 'opennebula._user_oneadmin']) }}
 extend: {{ salt['pillar.get']('opennebula:lookup:sunstone:sls_extend', '{}') }}
 
 sunstone:
   pkg:
     - installed
-    - pkgs:
-{% for p in datamap.sunstone.pkgs %}
-      - {{ p }}
-{% endfor %}
+    - pkgs: {{ datamap.sunstone.pkgs }}
     - require:
       - user: oneadmin
   service:
-    - {{ service.state|default('running') }}
+    - {{ service.ensure|default('running') }}
     - name: {{ service.name|default('opennebula-sunstone') }}
     - enable: {{ service.enable|default(True) }}
-    {# TODO: service doesn't have a status command. Is this Debian specifc? #}
-    - sig: {{ service.psname|default('sunstone-server.rb') }}
     - require:
       - pkg: sunstone
 
-{% set f_ss = config.sunstone_server|default({}) %}
-{% if f_ss.manage|default(True) == True %}
-sunstone_server_conf: {# TODO: move to sunstone ^ ? #}
-  file:
-    #- serialize
-    - managed
-    - name: {{ f_ss.path|default('/etc/one/sunstone-server.conf') }}
-    #- dataset: {# salt['pillar.get']('opennebula:lookup:sunstone:config:sunstone_server:content', f_ss_config_default) #}
-    - contents_pillar: opennebula:lookup:sunstone:config:sunstone_server:content
-    #- formatter: YAML
-    - mode: {{ f_ss.mode|default('644') }}
-    - user: {{ f_ss.user|default('root') }}
-    - group: {{ f_ss.group|default('root') }}
-    - watch_in:
-      - service: sunstone
-{% endif %}
+sunstone_novnc:
+  service:
+    - {{ datamap.novnc.service.ensure|default('running') }}
+    - name: {{ datamap.novnc.service.name|default('opennebula-novnc') }}
+    - enable: {{ datamap.novnc.service.enable|default(True) }}
 
-{% set f_sv = config.sunstone_views|default({}) %}
-{% if f_sv.manage|default(False) == True %}
-sunstone_views_conf:
+
+{% for c in config.manage|default([]) %}
+  {% set f = config[c]|default({}) %}
+sunstone_config_{{ c }}:
   file:
-    - managed
-    #TODO buggy: - serialize
-    - name: {{ f_sv.path|default('/etc/one/sunstone-views.yaml') }}
-    #- dataset: {# salt['pillar.get']('opennebula:lookup:sunstone:config:sunstone_views:content', f_sv_config_default)|yaml #}
-    - contents_pillar: opennebula:lookup:sunstone:config:sunstone_views:content
-    #- formatter: YAML
-    - mode: {{ f_sv.mode|default('644') }}
-    - user: {{ f_sv.user|default('root') }}
-    - group: {{ f_sv.group|default('root') }}
+    - {{ f.ensure|default('serialize') }}
+    - name: {{ f.path }}
+    - contents_pillar: opennebula:lookup:sunstone:config:{{ c }}:settings
+    - formatter: YAML
+    - user: {{ f.user|default('root') }}
+    - group: {{ f.group|default('root') }}
+    - mode: {{ f.mode|default('644') }}
     - watch_in:
       - service: sunstone
-{% endif %}
+{% endfor %}
+
 
 #{% set f_ulos = config.usr_lib_one_sunstone|default({}) %}
 #/usr/lib/one/sunstone:
@@ -80,20 +57,3 @@ sunstone_views_conf:
 #      - {{ r }}
 #{% endfor %}
 
-{% set f_nv = datamap.novnc|default({}) %}
-{% if f_nv.manage|default(True) == True %}
-novnc_servicescript:
-  file:
-    - managed
-    - name: {{ f_nv.service.servicepath|default('/etc/init.d/opennebula-novnc') }}
-    - source: {{ f_nv.service.template_path|default('salt://opennebula/files/novnc/init_novnc') }}
-    - mode: {{ f_nv.mode|default('755') }}
-    - user: {{ f_nv.user|default('root') }}
-    - group: {{ f_nv.group|default('root') }}
-{% endif %}
-
-novnc_service:
-  service:
-    - {{ f_nv.service.state|default('running') }}
-    - name: {{ f_nv.service.name|default('opennebula-novnc') }}
-    - enable: {{ f_nv.service.enable|default(True) }}

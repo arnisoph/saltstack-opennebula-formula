@@ -12,10 +12,7 @@ include:
 onegate:
   pkg:
     - installed
-    - pkgs:
-{% for p in datamap['onegate']['pkgs'] %}
-      - {{ p }}
-{% endfor %}
+    - pkgs: {{ datamap.onegate.pkgs }}
     - require:
       - service: controller
   #TODO: use init script (http://dev.opennebula.org/issues/2183)
