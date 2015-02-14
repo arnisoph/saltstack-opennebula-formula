@@ -105,7 +105,7 @@ You also need to enable the collection of those hosts in your pillars. See pilla
 Formula Dependencies
 ====================
 
-None
+* custom execution module: https://github.com/bechtoldt/salt-modules (formhelper.get_defaults)
 
 Contributions
 =============
