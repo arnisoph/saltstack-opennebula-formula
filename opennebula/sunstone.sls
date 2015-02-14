@@ -1,15 +1,13 @@
 #!jinja|yaml
 
-{% from "opennebula/defaults.yaml" import rawmap with context %}
-{% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
-
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
 {% set config = datamap.sunstone.config|default({}) %}
 {% set service = datamap.sunstone.service|default({}) %}
 
 include: {{ salt['pillar.get']('opennebula:lookup:sunstone:sls_include', ['opennebula', 'opennebula._user_oneadmin']) }}
 extend: {{ salt['pillar.get']('opennebula:lookup:sunstone:sls_extend', '{}') }}
 
-sunstone:
+one_sunstone:
   pkg:
     - installed
     - pkgs: {{ datamap.sunstone.pkgs }}
@@ -20,9 +18,9 @@ sunstone:
     - name: {{ service.name|default('opennebula-sunstone') }}
     - enable: {{ service.enable|default(True) }}
     - require:
-      - pkg: sunstone
+      - pkg: one_sunstone
 
-sunstone_novnc:
+one_sunstone_novnc:
   service:
     - {{ datamap.novnc.service.ensure|default('running') }}
     - name: {{ datamap.novnc.service.name|default('opennebula-novnc') }}
@@ -31,7 +29,7 @@ sunstone_novnc:
 
 {% for c in config.manage|default([]) %}
   {% set f = config[c]|default({}) %}
-sunstone_config_{{ c }}:
+one_sunstone_config_{{ c }}:
   file:
     - {{ f.ensure|default('serialize') }}
     - name: {{ f.path }}
@@ -41,11 +39,11 @@ sunstone_config_{{ c }}:
     - group: {{ f.group|default('root') }}
     - mode: {{ f.mode|default('644') }}
     - watch_in:
-      - service: sunstone
+      - service: one_sunstone
 {% endfor %}
 
-
-#{% set f_ulos = config.usr_lib_one_sunstone|default({}) %}
+#TODO remove:
+{% set f_ulos = config.usr_lib_one_sunstone|default({}) %}
 #/usr/lib/one/sunstone:
 #  file:
 #    - directory
@@ -56,4 +54,3 @@ sunstone_config_{{ c }}:
 #{% for r in datamap['f_ulos.recurse']|default(['user', 'group']) %}
 #      - {{ r }}
 #{% endfor %}
-

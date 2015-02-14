@@ -1,16 +1,13 @@
 #!jinja|yaml
 
-{% from "opennebula/defaults.yaml" import rawmap with context %}
-{% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
-
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
 {% set config = datamap.controller.config|default({}) %}
 {% set service = datamap.controller.service|default({}) %}
 
-include:
-  - opennebula
-  - opennebula._user_oneadmin
+include: {{ salt['pillar.get']('opennebula:lookup:controller:sls_include', ['opennebula', 'opennebula._user_oneadmin']) }}
+extend: {{ salt['pillar.get']('opennebula:lookup:controller:sls_extend', '{}') }}
 
-controller:
+one_controller:
   pkg:
     - installed
     - pkgs: {{ datamap.controller.pkgs }}
@@ -18,12 +15,10 @@ controller:
     - running
     - name: {{ service.name|default('opennebula') }}
     - enable: {{ service.enable|default(True) }}
-    - watch:
-      - file: oned_conf
     - require:
       - sls: opennebula._user_oneadmin
-      - file: /usr/share/one
       - file: /usr/share/one/hooks
+
 
 {% if salt['grains.get']('os_family') == 'Debian' and datamap.gems_setup.enabled != False %}
 #install_gems: {# TODO: that fails, install the gems/pkgs yourself! #}
@@ -36,30 +31,6 @@ controller:
 #      - service: controller
 {% endif %}
 
-{% set f_o = config.oned_conf|default({}) %}
-oned_conf:
-  file:
-    - managed
-    - name: {{ f_o.path|default('/etc/one/oned.conf') }}
-    - source: {{ f_o.template_path|default('salt://opennebula/files/oned.conf') }}
-    - template: {{ f_o.template_renderer|default('jinja') }}
-    - user: {{ f_o.user|default('root') }}
-    - group: {{ f_o.group|default('oneadmin') }}
-    - mode: {{ f_o.mode|default('640') }}
-
-{% set f_ovek = config.one_vmm_exec_kvm|default({}) %}
-{% if f_ovek.manage|default(False) %}
-one_vmm_exec_kvm:
-  file:
-    - managed
-    - name: {{ f_ovek.path|default('/etc/one/vmm_exec/vmm_exec_kvm.conf') }}
-    - source: {{ f_ovek.template_path|default('salt://opennebula/files/vmm_exec/vmm_exec_kvm.conf') }}
-    - user: {{ f_ovek.user|default('root') }}
-    - group: {{ f_ovek.group|default('root') }}
-    - mode: {{ f_ovek.mode|default('644') }}
-    - watch_in:
-      - service: controller
-{% endif %}
 
 {% set f_uso = config.usr_share_one|default({}) %}
 /usr/share/one:
@@ -69,6 +40,7 @@ one_vmm_exec_kvm:
     - user: {{ f_uso.user|default('oneadmin') }}
     - group: {{ f_uso.group|default('oneadmin') }}
     - mode: {{ f_uso.mode|default('755') }}
+
 
 {% set f_usoh = config.usr_share_one_hooks|default({}) %}
 /usr/share/one/hooks:
@@ -83,19 +55,28 @@ one_vmm_exec_kvm:
     - clean: {{ f_usoh.clean|default(True) }}
     - exclude_pat: .gitignore
     - recurse: {{ datamap['f_usoh.recurse']|default(['user', 'group', 'file_mode', 'dir_mode']) }}
+    - require:
+      - file: /usr/share/one
 
-{% set f_oa = config.one_auth|default({}) %}
-{% if f_oa.manage|default(False) %}
-one_auth:
+
+{% for c in config['manage']|default([]) %}
+  {% set f = config[c]|default({}) %}
+one_controller_config_{{ c }}:
   file:
-    - managed
-    - name: {{ f_oa.path|default('/var/lib/one/.one/one_auth') }}
-    - contents_pillar: opennebula:lookup:controller:config:one_auth:content
-    - user: {{ f_oa.user|default('oneadmin') }}
-    - group: {{ f_oa.group|default('oneadmin') }}
-    - mode: {{ f_oa.mode|default('600') }}
-    - require_in:
-      - pkg: controller
+    - {{ f.ensure|default('managed') }}
+    - name: {{ f.path }}
+  {% if 'source' in f %}
+    - source: {{ f.source }}
+    - context: {{ f.context|default({}) }}
+    - template: jinja
+  {% else %}
+    - contents_pillar: opennebula:lookup:controller:config:{{ c }}:contents
+  {% endif %}
+    - user: {{ f.user|default('oneadmin') }}
+    - group: {{ f.group|default('oneadmin') }}
+    - mode: {{ f.mode|default('644') }}
     - require:
       - sls: opennebula._user_oneadmin
-{% endif %}
+    - watch_in:
+      - service: one_controller
+{% endfor %}

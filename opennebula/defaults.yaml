@@ -1,79 +1,90 @@
-{% load_yaml as rawmap %}
-Debian:
-  gems_setup:
-    enabled: True
-  oneadmin:
-    home: /var/lib/one
-    ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
-    ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
-    optional_groups:
-      - kvm
-      - libvirt
-      - ssl-cert
-  oneadmingroup:
-    name: oneadmin
-  controller:
-    pkgs:
-      - opennebula
-      - opennebula-tools
-      #- ruby-opennebula {# TODO <- ? #}
-  compute_node:
-    pkgs:
-      - opennebula-node
-  sunstone:
-    pkgs:
-      - opennebula-sunstone
-      - python-numpy
-    config:
-      sunstone_server:
-        path: /etc/one/sunstone-server.conf
-      sunstone_views:
-        path: /etc/one/sunstone-views.yaml
-    service: {}
-  oneflow:
-    pkgs:
-      - opennebula-flow
-      - ruby-treetop
-      - ruby-polyglot
-  onegate:
-    pkgs:
-      - opennebula-gate
-  novnc:
-    service: {}
-RedHat:
-  gems_setup:
-    enabled: True
-  oneadmin:
-    home: /var/lib/one
-    ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
-    ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
-    optional_groups:
-      - kvm
-      - libvirt
-      - ssl-cert
-  oneadmingroup:
-    name: oneadmin
-  controller:
-    pkgs:
-      - opennebula
-      - opennebula-tools
-      #- ruby-opennebula {# TODO <- ? #}
-  compute_node:
-    pkgs:
-      - opennebula-node-kvm
-  sunstone:
-    pkgs:
-      - opennebula-sunstone
-      - python-numpy
-    service: {}
-  oneflow:
-    pkgs:
-      - opennebula-flow
-      - ruby-treetop
-      - ruby-polyglot
-  onegate:
-    pkgs:
-      - opennebula-gate
-  novnc:
-    service: {}
-{% endload %}
+kernel:
+  Linux:
+    gems_setup:
+      enabled: True
+    oneadmin:
+      home: /var/lib/one
+      ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
+      ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
+      optional_groups:
+        - kvm
+        - libvirt
+        - ssl-cert
+    oneadmingroup:
+      name: oneadmin
+    controller:
+      pkgs:
+        - opennebula
+        - opennebula-tools
+      config:
+        manage:
+          - oned_conf
+          - one_vmm_exec_kvm
+          - ec2_auth
+          - occi_auth
+          - one_auth
+          - oneflow_auth
+          - onegate_auth
+          - one_key
+          - sunstone_auth
+        oned_conf:
+          path: /etc/one/oned.conf
+          source: 'salt://opennebula/files/oned.conf'
+          user: root
+          group: oneadmin
+          mode: 640
+        one_vmm_exec_kvm:
+          path: /etc/one/vmm_exec/vmm_exec_kvm.conf
+          source: 'salt://opennebula/files/vmm_exec/vmm_exec_kvm.conf'
+          user: root
+          group: root
+        ec2_auth:
+          path: /var/lib/one/.one/ec2_auth
+          mode: 600
+        occi_auth:
+          path: /var/lib/one/.one/occi_auth
+          mode: 600
+        one_auth:
+          path: /var/lib/one/.one/one_auth
+          mode: 600
+        oneflow_auth:
+          path: /var/lib/one/.one/oneflow_auth
+          mode: 600
+        onegate_auth:
+          path: /var/lib/one/.one/onegate_auth
+          mode: 600
+        one_key:
+          path: /var/lib/one/.one/one_key
+          mode: 600
+        sunstone_auth:
+          path: /var/lib/one/.one/sunstone_auth
+          mode: 600
+    sunstone:
+      pkgs:
+        - opennebula-sunstone
+        - python-numpy
+      config:
+        sunstone_server:
+          path: /etc/one/sunstone-server.conf
+        sunstone_views:
+          path: /etc/one/sunstone-views.yaml
+      service: {}
+    novnc:
+      service: {}
+    oneflow:
+      pkgs:
+        - opennebula-flow
+        - ruby-treetop
+        - ruby-polyglot
+    onegate:
+      pkgs:
+        - opennebula-gate
+os_family:
+  Debian:
+    compute_node:
+      pkgs:
+        - opennebula-node
+  RedHat:
+    compute_node:
+      pkgs:
+        - opennebula-node-kvm

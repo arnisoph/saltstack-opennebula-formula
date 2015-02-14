@@ -1,21 +1,17 @@
 #!jinja|yaml
 
-{% from "opennebula/defaults.yaml" import rawmap with context %}
-{% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
-
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
 {% set service = datamap.oneflow.service|default({}) %}
 
-include:
-  - opennebula
-  - opennebula.controller
-  - opennebula._user_oneadmin
+include: {{ salt['pillar.get']('opennebula:lookup:oneflow:sls_include', ['opennebula', 'opennebula.controller', 'opennebula._user_oneadmin']) }}
+extend: {{ salt['pillar.get']('opennebula:lookup:oneflow:sls_extend', '{}') }}
 
-oneflow:
+one_oneflow:
   pkg:
     - installed
     - pkgs: {{ datamap.oneflow.pkgs }}
     - require:
-      - service: controller
+      - service: one_controller
   #TODO: use init script (http://dev.opennebula.org/issues/2183)
   #service:
     #- running

@@ -1,7 +1,6 @@
 #!jinja|yaml
 
-{% from "opennebula/defaults.yaml" import rawmap with context %}
-{% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
 
 {% if 'hostlist' in salt['pillar.get']('opennebula:salt:collect', []) %}
   {% set hosts = salt['publish.publish'](salt['pillar.get']('opennebula:salt:collect_hostlist:tgt', '*'), 'grains.item', ['fqdn'], 'compound') %}

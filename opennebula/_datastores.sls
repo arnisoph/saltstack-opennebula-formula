@@ -1,7 +1,6 @@
 #!jinja|yaml
 
-{% from "opennebula/defaults.yaml" import rawmap with context %}
-{% set datamap = salt['grains.filter_by'](rawmap, merge=salt['pillar.get']('opennebula:lookup')) %}
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
 
 include:
   - opennebula
@@ -9,7 +8,7 @@ include:
 
 {% for d in salt['pillar.get']('opennebula:datastores', []) %}
   {% if d.type == 'nfs' %}
-{{ d.name }}:
+one_datastore_{{ d.name }}:
   file:
     - directory
     - name: {{ d.name }}

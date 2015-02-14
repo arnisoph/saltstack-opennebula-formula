@@ -122,7 +122,7 @@ Salt Compatibility
 
 Tested with:
 
-* 2014.1.x
+* develop (2014.7 + https://github.com/saltstack/salt/pull/20028)
 
 OS Compatibility
 ================
