@@ -4,12 +4,13 @@ kernel:
       enabled: True
     oneadmin:
       home: /var/lib/one
-      ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
-      ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
       optional_groups:
         - kvm
         - libvirt
         - ssl-cert
+      ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
+      ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
+      remotes: {}
     oneadmingroup:
       name: oneadmin
     controller:

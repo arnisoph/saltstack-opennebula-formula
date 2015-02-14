@@ -1,3 +1,7 @@
+{#
+  WARNING: This example is not up to date. Please stay tuned for updates.
+#}
+
 opennebula:
   lookup:
     controller:

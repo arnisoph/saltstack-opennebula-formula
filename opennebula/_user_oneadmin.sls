@@ -64,6 +64,26 @@ oneadmin_ssh_keypair: #TODO check this:
       - file: oneadmin_sshauthkeys
 {% endif %}
 
+{% if datamap.oneadmin.manage_remotes|default(False) %}
+  {% for remote in datamap.oneadmin.remotes.versions|default({}) %}
+oneadmin_remotes_{{ remote.rev }}:
+  git:
+    - latest
+    - name: {{ remote.src }}
+    - user: {{ datamap.oneadmin.name|default('oneadmin') }}
+    - rev: {{ datamap.oneadmin.remotes.rev|default('master') }}
+    - target: {{ datamap.oneadmin.home }}/remotes_{{ remote.rev }}
+  {% endfor %}
+
+oneadmin_remotes_link_current:
+  file:
+    - symlink
+    - name: {{ datamap.oneadmin.home }}/remotes
+    - target: {{ datamap.oneadmin.home }}/remotes_{{ datamap.oneadmin.remotes.current_version }}/remotes
+    - user: {{ datamap.oneadmin.name|default('oneadmin') }}
+    - group: {{ datamap.oneadmingroup.name|default('oneadmin') }}
+{% endif %}
+
 {% if datamap.oneadmin.deploy_controller_sshpubkeys|default(True) %}
 
   {% if 'controller_sshpubkey' in salt['pillar.get']('opennebula:salt:collect', []) %}
