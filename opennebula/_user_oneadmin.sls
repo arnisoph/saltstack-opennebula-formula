@@ -53,7 +53,7 @@ oneadmin_sshauthkeys:
       - file: oneadmin_sshdir
 
 {% if datamap.oneadmin.regenerate_ssh_keypair|default(False) %}
-oneadmin_ssh_keypair: #TODO check this:
+oneadmin_ssh_keypair:
   cmd:
     - run
     - name: {{ datamap.oneadmin.regenerate_ssh_keypair_cmd|default('ssh-keygen -q -b ' ~ datamap.oneadmin.ssh_bits|default('8192') ~ ' -t rsa -f ' ~ datamap.oneadmin.ssh_prvkey ~' -N "" && cat ' ~ datamap.oneadmin.ssh_pubkey ~ ' >> ' ~ datamap.oneadmin.home ~ '/.ssh/authorized_keys') }}
@@ -84,21 +84,21 @@ oneadmin_remotes_link_current:
     - group: {{ datamap.oneadmingroup.name|default('oneadmin') }}
 {% endif %}
 
+#TODO split the following code into a SLS like 'orchestration' or sth. else
 {% if datamap.oneadmin.deploy_controller_sshpubkeys|default(True) %}
 
-  {% if 'controller_sshpubkey' in salt['pillar.get']('opennebula:salt:collect', []) %}
-    {# TODO: Improve this ASAP. Use a better function to collect the SSH pubkey: ssh.user_keys #}
-    {% set d = salt['pillar.get']('opennebula:salt:collect_controller_sshpubkey', None) %}
+  {% if 'controller_sshpubkey' in salt['pillar.get']('opennebula:lookup:salt:collect', []) %}
+    {% set d = salt['pillar.get']('opennebula:lookup:salt:collect_controller_sshpubkey', None) %}
     {% set controllers = salt['mine.get'](d.tgt, d.fun, d.exprform|default('glob')) %}
   {% else %}
     {% set controllers = datamap.oneadmin.controller_sshpubkeys|default({}) %}
   {% endif %}
 
   {% for host, pubkey in controllers|dictsort %}
-ssh_auth_onecontroller_{{ datamap.oneadmin.name|default('oneadmin') }}_{{ host }}_{{ pubkey[-20:] }}:
+ssh_auth_onecontroller_{{ datamap.oneadmin.name|default('oneadmin') }}_{{ host }}_{{ pubkey['oneadmin']['id_rsa_one.pub'][-30:]|replace('\n', '') }}:
   ssh_auth:
     - present
-    - name: {{ pubkey }}
+    - name: {{ pubkey['oneadmin']['id_rsa_one.pub']|replace('\n', '') }}
     - user: {{ datamap.oneadmin.name|default('oneadmin') }}
   {% endfor %}
 {% endif %}

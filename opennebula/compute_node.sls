@@ -2,7 +2,7 @@
 
 {% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
 
-include: {{ salt['pillar.get']('opennebula:lookup:compute_node:sls_include', ['opennebula', 'opennebula._user_oneadmin', ''opennebula._datastores]) }}
+include: {{ salt['pillar.get']('opennebula:lookup:compute_node:sls_include', ['opennebula', 'opennebula._user_oneadmin', 'opennebula._datastores']) }}
 extend: {{ salt['pillar.get']('opennebula:lookup:compute_node:sls_extend', '{}') }}
 
 one_compute_node:
