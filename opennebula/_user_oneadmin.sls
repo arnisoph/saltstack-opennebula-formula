@@ -54,12 +54,12 @@ oneadmin_sshauthkeys:
       - file: oneadmin_sshdir
 
 {% if datamap.oneadmin.regenerate_ssh_keypair|default(False) %}
-
 oneadmin_ssh_keypair: #TODO check this:
   cmd:
     - run
     - name: {{ datamap.oneadmin.regenerate_ssh_keypair_cmd|default('ssh-keygen -q -b ' ~ datamap.oneadmin.ssh_bits|default('8192') ~ ' -t rsa -f ' ~ datamap.oneadmin.ssh_prvkey ~' -N "" && cat ' ~ datamap.oneadmin.ssh_pubkey ~ ' >> ' ~ datamap.oneadmin.home ~ '/.ssh/authorized_keys') }}
     - user: {{ datamap.oneadmin.name|default('oneadmin') }}
+    - unless: test -e {{ datamap.oneadmin.ssh_prvkey }}
     - require:
       - user: oneadmin
       - file: oneadmin_sshauthkeys

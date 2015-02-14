@@ -35,7 +35,7 @@ sunstone_config_{{ c }}:
   file:
     - {{ f.ensure|default('serialize') }}
     - name: {{ f.path }}
-    - contents_pillar: opennebula:lookup:sunstone:config:{{ c }}:settings
+    - dataset_pillar: opennebula:lookup:sunstone:config:{{ c }}:settings
     - formatter: YAML
     - user: {{ f.user|default('root') }}
     - group: {{ f.group|default('root') }}
