@@ -21,6 +21,7 @@ kernel:
       config:
         manage:
           - oned_conf
+          - sched_conf
           - one_vmm_exec_kvm
           - ec2_auth
           - occi_auth
@@ -33,8 +34,12 @@ kernel:
           path: /etc/one/oned.conf
           source: 'salt://opennebula/files/oned.conf'
           user: root
-          group: oneadmin
           mode: 640
+        sched_conf:
+          path: /etc/one/sched.conf
+          source: 'salt://opennebula/files/sched.conf'
+          user: root
+          group: root
         one_vmm_exec_kvm:
           path: /etc/one/vmm_exec/vmm_exec_kvm.conf
           source: 'salt://opennebula/files/vmm_exec/vmm_exec_kvm.conf'
