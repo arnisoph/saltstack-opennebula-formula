@@ -16,6 +16,7 @@ kernel:
       pkgs:
         - opennebula
         - opennebula-tools
+        - mysql-client
       config:
         manage:
           - oned_conf
