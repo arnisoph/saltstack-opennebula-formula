@@ -16,7 +16,6 @@ host_{{ v.fqdn }}_{{ ipaddr }}:
   {% endfor %}
 {% endif %}
 
-
 {% if datamap.orchestrate.hostpubkeys.manage|default(False) %}
   {% set keys = salt['publish.publish'](datamap.orchestrate.hostpubkeys.tgt|default('*'), 'grains.item', ['fqdn'], 'compound')|default({}) %}
 
@@ -30,7 +29,6 @@ knownhost_{{ v.fqdn }}: {# TODO move to saltstack-ssh-formula? #}
     #- enc: {# TODO key enc type #}
   {% endfor %}
 {% endif %}
-
 
 {% set f_osc = datamap.oneadmin.sshconfig|default({}) %}
 {% if f_osc.manage|default(True) and datamap.orchestrate.hostnames.manage|default(False) %}
@@ -50,7 +48,6 @@ oneadmin_sshconfig:
           HostName {{ v.fqdn }}
     {% endfor %}
 {% endif %}
-
 
 {% if datamap.orchestrate.controller_sshpubkeys.manage|default(False) %}
   {% set d = datamap.orchestrate.controller_sshpubkeys|default({}) %}

@@ -31,7 +31,6 @@ one_controller:
 #      - service: controller
 {% endif %}
 
-
 {% set f_uso = config.usr_share_one|default({}) %}
 /usr/share/one:
   file:
@@ -40,7 +39,6 @@ one_controller:
     - user: {{ f_uso.user|default('oneadmin') }}
     - group: {{ f_uso.group|default('oneadmin') }}
     - mode: {{ f_uso.mode|default('755') }}
-
 
 {% set f_usoh = config.usr_share_one_hooks|default({}) %}
 /usr/share/one/hooks:
@@ -57,7 +55,6 @@ one_controller:
     - recurse: {{ datamap['f_usoh.recurse']|default(['user', 'group', 'file_mode', 'dir_mode']) }}
     - require:
       - file: /usr/share/one
-
 
 {% for c in config['manage']|default([]) %}
   {% set f = config[c]|default({}) %}

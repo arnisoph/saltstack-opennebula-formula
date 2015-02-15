@@ -26,7 +26,6 @@ one_sunstone_novnc:
     - name: {{ datamap.novnc.service.name|default('opennebula-novnc') }}
     - enable: {{ datamap.novnc.service.enable|default(True) }}
 
-
 {% for c in config.manage|default([]) %}
   {% set f = config[c]|default({}) %}
 one_sunstone_config_{{ c }}:
