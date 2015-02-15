@@ -71,6 +71,9 @@ kernel:
         - opennebula-sunstone
         - python-numpy
       config:
+        manage:
+          - sunstone_server
+          - sunstone_views
         sunstone_server:
           path: /etc/one/sunstone-server.conf
         sunstone_views:

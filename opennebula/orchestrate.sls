@@ -21,7 +21,7 @@ host_{{ v.fqdn }}_{{ ipaddr }}:
   {% set keys = salt['publish.publish'](datamap.orchestrate.hostpubkeys.tgt|default('*'), 'grains.item', ['fqdn'], 'compound')|default({}) %}
 
   {% for k, v in keys|dictsort %}
-knownhost_{{ v.fqdn }}:
+knownhost_{{ v.fqdn }}: {# TODO move to saltstack-ssh-formula? #}
   ssh_known_hosts:
     - present
     - name: {{ v.fqdn }}
@@ -46,7 +46,7 @@ oneadmin_sshconfig:
       - file: {{ datamap.oneadmin.home }}/.ssh
     - contents: |
     {%- for k, v in hostnames|dictsort %}
-        Host {{ v.host }}
+        Host {{ v.host }} {{ v.fqdn }}
           HostName {{ v.fqdn }}
     {% endfor %}
 {% endif %}
@@ -59,7 +59,7 @@ oneadmin_sshconfig:
   {% set controllers = datamap.orchestrate.controller_sshpubkeys.static|default({}) %}
 {% endif %}
 
-{# TODO: remove replace when https://github.com/saltstack/salt/issues/20708 is resolved #}
+{# TODO remove replace when https://github.com/saltstack/salt/issues/20708 is resolved #}
 {% for host, pubkey in controllers|dictsort %}
 ssh_auth_onecontroller_{{ datamap.oneadmin.name|default('oneadmin') }}_{{ host }}_{{ pubkey['oneadmin']['id_rsa_one.pub'][-30:]|replace('\n', '') }}:
   ssh_auth:
