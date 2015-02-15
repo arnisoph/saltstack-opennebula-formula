@@ -19,18 +19,6 @@ one_controller:
       - sls: opennebula._user_oneadmin
       - file: /usr/share/one/hooks
 
-
-{% if salt['grains.get']('os_family') == 'Debian' and datamap.gems_setup.enabled != False %}
-#install_gems: {# TODO: that fails, install the gems/pkgs yourself! #}
-#  cmd:
-#    - wait
-#    - name: {{ datamap.gems_setup.cmd|default('/usr/share/one/install_gems') }}
-#    - watch:
-#      - pkg: controller
-#    - require_in:
-#      - service: controller
-{% endif %}
-
 {% set f_uso = config.usr_share_one|default({}) %}
 /usr/share/one:
   file:

@@ -1,6 +1,7 @@
 #!jinja|yaml
 
 {% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
+{% set config = datamap.oneadmin.config|default({}) %}
 
 oneadmin:
   user:
@@ -48,6 +49,26 @@ oneadmin_sshauthkeys:
     - group: {{ datamap.oneadmingroup.name|default('oneadmin') }}
     - require:
       - file: oneadmin_sshdir
+
+{% for c in config['manage']|default([]) %}
+  {% set f = config[c]|default({}) %}
+one_oneadmin_config_{{ c }}:
+  file:
+    - {{ f.ensure|default('managed') }}
+    - name: {{ f.path }}
+  {% if 'source' in f %}
+    - source: {{ f.source }}
+    - context: {{ f.context|default({}) }}
+    - template: jinja
+  {% else %}
+    - contents_pillar: opennebula:lookup:oneadmin:config:{{ c }}:contents
+  {% endif %}
+    - user: {{ f.user|default('oneadmin') }}
+    - group: {{ f.group|default('oneadmin') }}
+    - mode: {{ f.mode|default('644') }}
+    - require:
+      - user: oneadmin
+{% endfor %}
 
 {% if datamap.oneadmin.regenerate_ssh_keypair|default(False) %}
 oneadmin_ssh_keypair:

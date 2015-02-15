@@ -1,28 +1,13 @@
 kernel:
   Linux:
-    gems_setup:
-      enabled: True
     oneadmin:
       home: /var/lib/one
       optional_groups:
         - kvm
         - libvirt
         - ssl-cert
-      ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
-      ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
-      remotes: {}
-    oneadmingroup:
-      name: oneadmin
-    controller:
-      pkgs:
-        - opennebula
-        - opennebula-tools
-        - mysql-client
       config:
         manage:
-          - oned_conf
-          - sched_conf
-          - one_vmm_exec_kvm
           - ec2_auth
           - occi_auth
           - one_auth
@@ -30,21 +15,6 @@ kernel:
           - onegate_auth
           - one_key
           - sunstone_auth
-        oned_conf:
-          path: /etc/one/oned.conf
-          source: 'salt://opennebula/files/oned.conf'
-          user: root
-          mode: 640
-        sched_conf:
-          path: /etc/one/sched.conf
-          source: 'salt://opennebula/files/sched.conf'
-          user: root
-          group: root
-        one_vmm_exec_kvm:
-          path: /etc/one/vmm_exec/vmm_exec_kvm.conf
-          source: 'salt://opennebula/files/vmm_exec/vmm_exec_kvm.conf'
-          user: root
-          group: root
         ec2_auth:
           path: /var/lib/one/.one/ec2_auth
           mode: 600
@@ -66,6 +36,36 @@ kernel:
         sunstone_auth:
           path: /var/lib/one/.one/sunstone_auth
           mode: 600
+      ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
+      ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
+      remotes: {}
+    oneadmingroup:
+      name: oneadmin
+    controller:
+      pkgs:
+        - opennebula
+        - opennebula-tools
+        - mysql-client
+      config:
+        manage:
+          - oned_conf
+          - sched_conf
+          - one_vmm_exec_kvm
+        oned_conf:
+          path: /etc/one/oned.conf
+          source: 'salt://opennebula/files/oned.conf'
+          user: root
+          mode: 640
+        sched_conf:
+          path: /etc/one/sched.conf
+          source: 'salt://opennebula/files/sched.conf'
+          user: root
+          group: root
+        one_vmm_exec_kvm:
+          path: /etc/one/vmm_exec/vmm_exec_kvm.conf
+          source: 'salt://opennebula/files/vmm_exec/vmm_exec_kvm.conf'
+          user: root
+          group: root
     sunstone:
       pkgs:
         - opennebula-sunstone
