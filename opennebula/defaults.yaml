@@ -74,10 +74,13 @@ kernel:
         manage:
           - sunstone_server
           - sunstone_views
+          - sunstone_view_cloud
         sunstone_server:
           path: /etc/one/sunstone-server.conf
         sunstone_views:
           path: /etc/one/sunstone-views.yaml
+        sunstone_view_cloud:
+          path: /etc/one/sunstone-views/cloud.yaml
       service: {}
     novnc:
       service: {}
