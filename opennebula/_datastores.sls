@@ -3,11 +3,9 @@
 {% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
 
 include:
-  - opennebula
   - opennebula._user_oneadmin
 
-{% for d in salt['pillar.get']('opennebula:datastores', []) %}
-  {% if d.type == 'nfs' %}
+{% for d in datamap.datastores|default([]) if d.type == 'nfs'%}
 one_datastore_{{ d.name }}:
   file:
     - directory
@@ -23,5 +21,4 @@ one_datastore_{{ d.name }}:
     - fstype: {{ d.type }}
     - opts: {{ d.opts|default('auto') }}
     - persist: {{ d.persist|default(True) }}
-  {% endif %}
 {% endfor %}

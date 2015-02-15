@@ -4,7 +4,7 @@
 {% set config = datamap.controller.config|default({}) %}
 {% set service = datamap.controller.service|default({}) %}
 
-include: {{ salt['pillar.get']('opennebula:lookup:controller:sls_include', ['opennebula', 'opennebula._user_oneadmin']) }}
+include: {{ salt['pillar.get']('opennebula:lookup:controller:sls_include', ['._user_oneadmin', '.orchestrate']) }}
 extend: {{ salt['pillar.get']('opennebula:lookup:controller:sls_extend', '{}') }}
 
 one_controller:

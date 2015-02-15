@@ -4,7 +4,7 @@
 {% set config = datamap.sunstone.config|default({}) %}
 {% set service = datamap.sunstone.service|default({}) %}
 
-include: {{ salt['pillar.get']('opennebula:lookup:sunstone:sls_include', ['opennebula', 'opennebula._user_oneadmin']) }}
+include: {{ salt['pillar.get']('opennebula:lookup:sunstone:sls_include', ['._user_oneadmin']) }}
 extend: {{ salt['pillar.get']('opennebula:lookup:sunstone:sls_extend', '{}') }}
 
 one_sunstone:
@@ -33,7 +33,7 @@ one_sunstone_config_{{ c }}:
   file:
     - {{ f.ensure|default('serialize') }}
     - name: {{ f.path }}
-    - dataset_pillar: opennebula:lookup:sunstone:config:{{ c }}:settings
+    - dataset_pillar: opennebula:lookup:sunstone:config:{{ c }}:config
     - formatter: YAML
     - user: {{ f.user|default('root') }}
     - group: {{ f.group|default('root') }}
@@ -41,16 +41,3 @@ one_sunstone_config_{{ c }}:
     - watch_in:
       - service: one_sunstone
 {% endfor %}
-
-#TODO remove:
-{% set f_ulos = config.usr_lib_one_sunstone|default({}) %}
-#/usr/lib/one/sunstone:
-#  file:
-#    - directory
-#    - name: {{ f_ulos.path|default('/usr/lib/one/sunstone') }}
-#    - user: {{ f_ulos.user|default('oneadmin') }}
-#    - group: {{ f_ulos.group|default('oneadmin') }}
-#    - recurse:
-#{% for r in datamap['f_ulos.recurse']|default(['user', 'group']) %}
-#      - {{ r }}
-#{% endfor %}

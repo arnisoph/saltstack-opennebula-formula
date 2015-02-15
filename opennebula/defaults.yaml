@@ -86,6 +86,11 @@ kernel:
     onegate:
       pkgs:
         - opennebula-gate
+    orchestrate:
+      hostlist: {}
+      hostpubkeys: {}
+      hostnames: {}
+      controller_sshpubkey: {}
 os_family:
   Debian:
     compute_node:

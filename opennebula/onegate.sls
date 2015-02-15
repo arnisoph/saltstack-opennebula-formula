@@ -3,7 +3,7 @@
 {% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
 {% set service = datamap.onegate.service|default({}) %}
 
-include: {{ salt['pillar.get']('opennebula:lookup:onegate:sls_include', ['opennebula', 'opennebula.contoller', 'opennebula._user_oneadmin']) }}
+include: {{ salt['pillar.get']('opennebula:lookup:onegate:sls_include', ['.contoller']) }}
 extend: {{ salt['pillar.get']('opennebula:lookup:onegate:sls_extend', '{}') }}
 
 one_onegate:
