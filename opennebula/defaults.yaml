@@ -90,7 +90,7 @@ kernel:
       hostlist: {}
       hostpubkeys: {}
       hostnames: {}
-      controller_sshpubkey: {}
+      controller_sshpubkeys: {}
 os_family:
   Debian:
     compute_node:

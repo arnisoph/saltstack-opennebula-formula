@@ -52,11 +52,11 @@ oneadmin_sshconfig:
 {% endif %}
 
 
-{% if datamap.orchestrate.sshpubkeys.manage|default(False) %}
-  {% set d = datamap.orchestrate.sshpubkeys|default({}) %}
+{% if datamap.orchestrate.controller_sshpubkeys.manage|default(False) %}
+  {% set d = datamap.orchestrate.controller_sshpubkeys|default({}) %}
   {% set controllers = salt['mine.get'](d.tgt, d.fun, d.exprform|default('glob')) %}
 {% else %}
-  {% set controllers = datamap.orchestrate.sshpubkeys.static|default({}) %}
+  {% set controllers = datamap.orchestrate.controller_sshpubkeys.static|default({}) %}
 {% endif %}
 
 {# TODO: remove replace when https://github.com/saltstack/salt/issues/20708 is resolved #}
