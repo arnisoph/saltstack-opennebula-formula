@@ -1,0 +1,13 @@
+name: saltstack-opennebula-formula
+source: https://github.com/bechtoldt/saltstack-opennebula-formula
+summary: SaltStack Formula to set up and configure the cloud management platform OpenNebula
+todo:
+  - add instructions how to use formhelper, add information about it in the formula-docs (dependency), show up alternative?
+  - 'table/ matrix: os/salt compatibility (dedicated file)'
+  - add list of available states
+  - add tests
+  - register new storage automatically
+  - register new frontends automatically
+  - register new nodes automatically
+  - 'deploy to sunstone host: serveradmin credentials'
+  - chown oneadmin. /var/lib/libvirt/qemu
