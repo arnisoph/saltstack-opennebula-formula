@@ -1,45 +1,152 @@
-{#
-  WARNING: This example is not up to date. Please stay tuned for updates.
-#}
-
+{# Controller Node #}
 opennebula:
   lookup:
     controller:
       config:
         oned_conf:
-          template_path: False
+          context:
+            db_server: 127.0.0.1
+            db_user: oneadmin
+            db_passwd: oneadmin
+            db_name: opennebula
+    oneadmin:
+      config:
+        ec2_auth:
+          contents: 'serveradmin:myinitialpasswhichwillbechangedafterfirstlogin'
+        occi_auth:
+          contents: 'serveradmin:myinitialpasswhichwillbechangedafterfirstlogin'
         one_auth:
-          manage: True
-          content: 'oneadmin:myinitialpasswhichwillbechangedafterfirstlogin'
+          contents: 'oneadmin:myinitialpasswhichwillbechangedafterfirstlogin'
+        oneflow_auth:
+          contents: 'serveradmin:myinitialpasswhichwillbechangedafterfirstlogin'
+        onegate_auth:
+          contents: 'serveradmin:myinitialpasswhichwillbechangedafterfirstlogin'
+        one_key:
+          contents: 'myinitialpasswhichwillbechangedafterfirstlogin'
+        sunstone_auth:
+          contents: 'serveradmin:myinitialpasswhichwillbechangedafterfirstlogin'
+      sshconfig:
+        manage: True
+      regenerate_ssh_keypair: True
+      manage_remotes: True
+      remotes:
+        current_version: v4.10.1-1
+        versions:
+          - src: https://gitlab.domain.de/user/one-remotes.git
+            rev: v4.10.1-1
+    orchestrate:
+      hostlist:
+       tgt: I@saltenv:prod and ( I@roles:opennebula_controller or I@roles:opennebula_compute_node ) and I@entities:one_nc1
+      hostpubkeys:
+        manage: True
+        tgt: I@saltenv:prod and ( I@roles:opennebula:controller:True or I@roles:opennebula:compute_node:True )
+      hostnames:
+        tgt: I@saltenv:prod and ( I@roles:opennebula_controller or I@roles:opennebula_compute_node ) and I@entities:one_nc1
+
+mine_functions:
+  oneadmin_pubkey:
+    mine_function: ssh.user_keys
+    user: oneadmin
+    pubfile: /var/lib/one/.ssh/id_rsa.pub
+    prvfile: False
+
+
+{# Compute Node #}
+
+{# Collecting oneadmin's sshpubkey on the controller and deploy on e.g. compute_node #}
+opennebula:
+  lookup:
+    orchestrate:
+      controller_sshpubkeys:
+        manage: True
+        tgt: I@saltenv:prod and I@roles:opennebula:controller:True
+        fun: oneadmin_pubkey
+        exprform: compound
+
+
+{# (Web) frontend Node #}
+opennebula:
+  lookup:
+    oneadmin:
+      config:
+        manage:
+#          - one_auth
+#          - one_key
+          - sunstone_auth
+#        one_auth:
+#          contents: 'oneadmin:myinitialpasswhichwillbechangedafterfirstlogin'
+#        one_key:
+#          contents: 'myinitialpasswhichwillbechangedafterfirstlogin'
+        sunstone_auth:
+          contents: 'serveradmin:myinitialpasswhichwillbechangedafterfirstlogin'
     sunstone:
+#      sls_include:
+#        - crypto.x509
+#      sls_extend:
+#        crypto-x509-key-sunstone_key:
+#          file:
+#            - require:
+#              - group: oneadmin
       config:
         sunstone_server:
-          content:
+          config:
             :tmpdir: /var/tmp
-            :one_xmlrpc: http://localhost:2633/RPC2
-            :host: 0.0.0.0
+            :one_xmlrpc: 'http://127.0.0.1:2633/RPC2'
+            :host: 127.0.0.1
             :port: 9869
             :sessions: memory
-            :memcache_host: localhost
+            :memcache_host: 127.0.0.1
             :memcache_port: 11211
             :memcache_namespace: opennebula.sunstone
             :debug_level: 3
-            :auth: sunstone
+            :auth: opennebula
             :core_auth: cipher
             :vnc_proxy_port: 29876
-            :vnc_proxy_support_wss: no
-            :vnc_proxy_cert:
-            :vnc_proxy_key:
+            :vnc_proxy_support_wss: only
+            :vnc_proxy_cert: /etc/ssl/certs/32_62_C5_12_01_httpd_crt.crt.pem
+            :vnc_proxy_key: /etc/ssl/private/32_62_C5_12_01_httpd_key.key.pem
             :vnc_proxy_ipv6: false
             :lang: en_US
             :table_order: desc
-            :marketplace_url: http://marketplace.c12g.com/appliance
-            :oneflow_server: http://localhost:2474/
+            :marketplace_url: 'http://marketplace.opennebula.systems/appliance'
+            :oneflow_server: 'http://127.0.0.1:2474/'
             :routes:
-              - oneflow
+                - :oneflow
+                - :vcenter
+                - :support
+            :instance_types:
+                - :name: small-x1
+                  :cpu: 1
+                  :vcpu: 1
+                  :memory: 128
+                  :description: Very small instance for testing purposes
+                - :name: small-x2
+                  :cpu: 2
+                  :vcpu: 2
+                  :memory: 512
+                  :description: Small instance for testing multi-core applications
+                - :name: medium-x2
+                  :cpu: 2
+                  :vcpu: 2
+                  :memory: 1024
+                  :description: General purpose instance for low-load servers
+                - :name: medium-x4
+                  :cpu: 4
+                  :vcpu: 4
+                  :memory: 2048
+                  :description: General purpose instance for medium-load servers
+                - :name: large-x4
+                  :cpu: 4
+                  :vcpu: 4
+                  :memory: 4096
+                  :description: General purpose instance for servers
+                - :name: large-x8
+                  :cpu: 8
+                  :vcpu: 8
+                  :memory: 8192
+                  :description: General purpose instance for high-load servers
         sunstone_views:
-          manage: True
-          content:
+          config:
             logo: images/opennebula-sunstone-v4.0.png
             available_tabs:
                 - dashboard-tab
@@ -53,82 +160,49 @@ opennebula:
                 - images-tab
                 - files-tab
                 - infra-tab
-                - clusters-tab
+                #- clusters-tab
                 - hosts-tab
                 - datastores-tab
                 - vnets-tab
-                - zones-tab
+                #- zones-tab
+                #- marketplace-tab
+                #- oneflow-dashboard
+                #- oneflow-services
+                #- oneflow-templates
                 - provision-tab
+                #- support-tab
             groups:
                 oneadmin:
                     - admin
                     - vdcadmin
                     - user
                     - cloud
+                    - vcenter
             default:
                 - cloud
-  datastores:
-    - name: /var/lib/one/datastores/1
-      type: nfs
-      source: mycontroller.domain.local:/var/lib/one/datastores/1
-    - name: /var/lib/one/datastores/2
-      type: nfs
-      source: mycontroller.domain.local:/var/lib/one/datastores/2
-
-
-{# Collect oneadmin's sshpubkey on the controller and deploy on e.g. compute_node #}
-opennebula:
-  salt:
-    collect:
-      - controller_sshpubkey
-
-    {# A specific host #}
-    collect_controller_sshpubkey:
-      tgt: mycontroller.domain.local
-      fun: cmd.run_stdout
-
-    {# A set of specfic hosts #}
-    collect_controller_sshpubkey:
-      tgt: I@environment:prod and G@roles:opennebula_controller
-      fun: cmd.run_stdout
-      exprform: compound
-
-{# ... or specifiy oneadmin's sshpubkey manually #}
-oneadmin:
-  lookup:
-    oneadmin:
-      controller_sshpubkeys:
-        mycontroller: AAAAB3NzaC1yc2EAAA..
-
-
-mine_functions: {# <= yes, this is an arbitrary pillar too! #}
-  cmd.run_stdout:
-    - 'test -r /var/lib/one/.ssh/id_rsa.pub && cat /var/lib/one/.ssh/id_rsa.pub'
-
-{# Collect host list to set static host lookup (/etc/hosts) #}
-opennebula:
-  salt:
-    collect:
-      - hostlist
-    collect_hostlist:
-      tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node ) and not G@fqdn:{{ salt['grains.get']('fqdn', 'grainsnotavailableyoushouldfixthat') }}
-
-{# Collect host list and their SSH host keys to oneadmin's known_host list #}
-opennebula:
-  salt:
-    collect:
-      - hostspubkey
-    collect_hostspubkey:
-      tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node )
-
-{# Manage ssh configuration of oneadmin user #}
-opennebula:
-  lookup:
-    oneadmin:
-      sshconfig:
-        manage: True
-  salt:
-    collect:
-      - host_names
-    collect_host_names:
-      tgt: I@environment:prod and ( G@roles:opennebula_controller or G@roles:opennebula_compute_node ) and G@teams:one_nc1
+        sunstone_view_cloud:
+          config:
+            provision_logo: images/one_small_logo.png
+            enabled_tabs:
+              provision-tab: true
+            tabs:
+              provision-tab:
+                panel_tabs:
+                  users: false
+                  flows: false
+                  templates: false
+                actions:
+                  Template.chmod: false
+                  Template.delete: false
+                dashboard:
+                  quotas: true
+                  vms: true
+                  vdcquotas: false
+                  vdcvms: false
+                  users:  false
+                create_vm:
+                  capacity_select: false
+                  network_select: false
+      service:
+        ensure: dead
+        enable: False
