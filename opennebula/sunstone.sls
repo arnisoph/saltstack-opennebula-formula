@@ -35,8 +35,8 @@ one_sunstone_config_{{ c }}:
     - dataset_pillar: opennebula:lookup:sunstone:config:{{ c }}:config
     - formatter: YAML
     - user: {{ f.user|default('root') }}
-    - group: {{ f.group|default('root') }}
-    - mode: {{ f.mode|default('644') }}
+    - group: {{ f.group|default('oneadmin') }}
+    - mode: {{ f.mode|default('640') }}
     - watch_in:
       - service: one_sunstone
 {% endfor %}
