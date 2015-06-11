@@ -9,12 +9,12 @@ kernel:
 #          - oneflow_auth
 #          - onegate_auth
 #          - sunstone_auth
-#        ec2_auth:
-#          path: /var/lib/one/.one/ec2_auth
-#          mode: 600
-#        occi_auth:
-#          path: /var/lib/one/.one/occi_auth
-#          mode: 600
+        ec2_auth:
+          path: /var/lib/one/.one/ec2_auth
+          mode: 600
+        occi_auth:
+          path: /var/lib/one/.one/occi_auth
+          mode: 600
         one_auth:
           path: /var/lib/one/.one/one_auth
           mode: 600
