@@ -3,13 +3,11 @@ kernel:
     oneadmin:
       home: /var/lib/one
       config:
-        manage:
+        manage: []
 #          - ec2_auth
 #          - occi_auth
-          - one_auth
 #          - oneflow_auth
 #          - onegate_auth
-          - one_key
 #          - sunstone_auth
 #        ec2_auth:
 #          path: /var/lib/one/.one/ec2_auth
@@ -20,18 +18,18 @@ kernel:
         one_auth:
           path: /var/lib/one/.one/one_auth
           mode: 600
-#        oneflow_auth:
-#          path: /var/lib/one/.one/oneflow_auth
-#          mode: 600
-#        onegate_auth:
-#          path: /var/lib/one/.one/onegate_auth
-#          mode: 600
+        oneflow_auth:
+          path: /var/lib/one/.one/oneflow_auth
+          mode: 600
+        onegate_auth:
+          path: /var/lib/one/.one/onegate_auth
+          mode: 600
         one_key:
           path: /var/lib/one/.one/one_key
           mode: 600
-#        sunstone_auth:
-#          path: /var/lib/one/.one/sunstone_auth
-#          mode: 600
+        sunstone_auth:
+          path: /var/lib/one/.one/sunstone_auth
+          mode: 600
       ssh_pubkey: /var/lib/one/.ssh/id_rsa_one.pub
       ssh_prvkey: /var/lib/one/.ssh/id_rsa_one
       remotes: {}
