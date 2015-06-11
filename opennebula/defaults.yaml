@@ -2,19 +2,13 @@ kernel:
   Linux:
     oneadmin:
       home: /var/lib/one
-      optional_groups:
-        - kvm
-        - libvirt
-        - ssl-cert
       config:
-        manage:
-          - ec2_auth
-          - occi_auth
-          - one_auth
-          - oneflow_auth
-          - onegate_auth
-          - one_key
-          - sunstone_auth
+        manage: []
+#          - ec2_auth
+#          - occi_auth
+#          - oneflow_auth
+#          - onegate_auth
+#          - sunstone_auth
         ec2_auth:
           path: /var/lib/one/.one/ec2_auth
           mode: 600
@@ -42,10 +36,6 @@ kernel:
     oneadmingroup:
       name: oneadmin
     controller:
-      pkgs:
-        - opennebula
-        - opennebula-tools
-        - mysql-client
       config:
         manage:
           - oned_conf
@@ -54,22 +44,13 @@ kernel:
         oned_conf:
           path: /etc/one/oned.conf
           source: 'salt://opennebula/files/oned.conf'
-          user: root
-          mode: 640
         sched_conf:
           path: /etc/one/sched.conf
           source: 'salt://opennebula/files/sched.conf'
-          user: root
-          group: root
         one_vmm_exec_kvm:
           path: /etc/one/vmm_exec/vmm_exec_kvm.conf
           source: 'salt://opennebula/files/vmm_exec/vmm_exec_kvm.conf'
-          user: root
-          group: root
     sunstone:
-      pkgs:
-        - opennebula-sunstone
-        - python-numpy
       config:
         manage:
           - sunstone_server
@@ -85,13 +66,7 @@ kernel:
     novnc:
       service: {}
     oneflow:
-      pkgs:
-        - opennebula-flow
-        - ruby-treetop
-        - ruby-polyglot
     onegate:
-      pkgs:
-        - opennebula-gate
     orchestrate:
       hostlist: {}
       hostpubkeys: {}
@@ -99,10 +74,69 @@ kernel:
       controller_sshpubkeys: {}
 os_family:
   Debian:
+    oneadmin:
+      optional_groups:
+        - kvm
+        - libvirt
+        - ssl-cert
+    controller:
+      pkgs:
+        - opennebula
+        - opennebula-tools
+        - mysql-client
     compute_node:
       pkgs:
         - opennebula-node
+    oneflow:
+      pkgs:
+        - opennebula-flow
+        - ruby-treetop
+        - ruby-polyglot
+    onegate:
+      pkgs:
+        - opennebula-gate
+    sunstone:
+      pkgs:
+        - opennebula-sunstone
+        - python-numpy
   RedHat:
+    controller:
+      pkgs:
+        - opennebula-server
+        - mariadb
+        - rubygem-nokogiri
+        - rubygem-json
+        - rubygem-rack
+        - rubygem-sinatra
+        - rubygem-thin
+        - rubygem-zendesk_api
+        - rubygem-sqlite3
+        - rubygem-sequel
+        - rubygem-amazon-ec2
+        - rubygem-uuidtools
+        - rubygem-curb
+        - rubygem-net-ldap
+        - rubygem-builder
+        - rubygem-trollop
+        - rubygem-treetop
+        - rubygem-parse-cron
+        - rubygem-aws-sdk
+        - rubygem-ox
+        - rubygem-mysql
+        - rubygem-softlayer_api
+        - rubygem-configparser
+        - rubygem-azure
+
     compute_node:
       pkgs:
         - opennebula-node-kvm
+    oneflow:
+      pkgs:
+        - opennebula-flow
+    onegate:
+      pkgs:
+        - opennebula-gate
+    sunstone:
+      pkgs:
+        - opennebula-sunstone
+        - numpy
