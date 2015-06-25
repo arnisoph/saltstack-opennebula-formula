@@ -57,9 +57,9 @@ one_controller_config_{{ c }}:
   {% else %}
     - contents_pillar: opennebula:lookup:controller:config:{{ c }}:contents
   {% endif %}
-    - user: {{ f.user|default('oneadmin') }}
+    - user: {{ f.user|default('root') }}
     - group: {{ f.group|default('oneadmin') }}
-    - mode: {{ f.mode|default('644') }}
+    - mode: {{ f.mode|default('640') }}
     - require:
       - sls: opennebula._user_oneadmin
     - watch_in:
