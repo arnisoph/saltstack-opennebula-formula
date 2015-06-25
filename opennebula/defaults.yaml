@@ -65,8 +65,8 @@ kernel:
       service: {}
     novnc:
       service: {}
-    oneflow:
-    onegate:
+    oneflow: {}
+    onegate: {}
     orchestrate:
       hostlist: {}
       hostpubkeys: {}
@@ -83,7 +83,7 @@ os_family:
       pkgs:
         - opennebula
         - opennebula-tools
-        - mysql-client
+        #- mysql-client
     compute_node:
       pkgs:
         - opennebula-node
@@ -103,30 +103,29 @@ os_family:
     controller:
       pkgs:
         - opennebula-server
-        - mariadb
-        - rubygem-nokogiri
-        - rubygem-json
-        - rubygem-rack
-        - rubygem-sinatra
-        - rubygem-thin
-        - rubygem-zendesk_api
-        - rubygem-sqlite3
-        - rubygem-sequel
-        - rubygem-amazon-ec2
-        - rubygem-uuidtools
-        - rubygem-curb
-        - rubygem-net-ldap
-        - rubygem-builder
-        - rubygem-trollop
-        - rubygem-treetop
-        - rubygem-parse-cron
-        - rubygem-aws-sdk
-        - rubygem-ox
-        - rubygem-mysql
-        - rubygem-softlayer_api
-        - rubygem-configparser
-        - rubygem-azure
-
+        #- mariadb
+        #- rubygem-nokogiri
+        #- rubygem-json
+        #- rubygem-rack
+        #- rubygem-sinatra
+        #- rubygem-thin
+        #- rubygem-zendesk_api
+        #- rubygem-sqlite3
+        #- rubygem-sequel
+        #- rubygem-amazon-ec2
+        #- rubygem-uuidtools
+        #- rubygem-curb
+        #- rubygem-net-ldap
+        #- rubygem-builder
+        #- rubygem-trollop
+        #- rubygem-treetop
+        #- rubygem-parse-cron
+        #- rubygem-aws-sdk
+        #- rubygem-ox
+        #- rubygem-mysql
+        #- rubygem-softlayer_api
+        #- rubygem-configparser
+        #- rubygem-azure
     compute_node:
       pkgs:
         - opennebula-node-kvm
