@@ -50,6 +50,29 @@ oneadmin_sshauthkeys:
     - require:
       - file: oneadmin_sshdir
 
+{% if config.create_oneadmin_auth_files|default(False) %}
+{% for c in ['one_auth', 'one_key'] %}
+  {% set f = config[c]|default({}) %}
+one_oneadmin_config_{{ c }}:
+  file:
+    - {{ f.ensure|default('managed') }}
+    - name: {{ f.path }}
+    - unless: test -f {{ f.path }}
+  {% if 'source' in f %}
+    - source: {{ f.source }}
+    - context: {{ f.context|default({}) }}
+    - template: jinja
+  {% else %}
+    - contents_pillar: opennebula:lookup:oneadmin:config:{{ c }}:contents
+  {% endif %}
+    - user: {{ f.user|default('oneadmin') }}
+    - group: {{ f.group|default('oneadmin') }}
+    - mode: {{ f.mode|default('644') }}
+    - require:
+      - user: oneadmin
+{% endfor %}
+{% endif %}
+
 {% for c in config['manage']|default([]) %}
   {% set f = config[c]|default({}) %}
 one_oneadmin_config_{{ c }}:
