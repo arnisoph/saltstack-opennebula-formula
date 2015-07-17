@@ -56,6 +56,9 @@ one_oneadmin_config_{{ c }}:
   file:
     - {{ f.ensure|default('managed') }}
     - name: {{ f.path }}
+  {% if 'replace' in f %}
+    - replace: {{ f.replace }}
+  {% endif %}
   {% if 'source' in f %}
     - source: {{ f.source }}
     - context: {{ f.context|default({}) }}
