@@ -1,6 +1,6 @@
 #!jinja|yaml
 
-{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv) %}
 
 {% if datamap.orchestrate.hostlist.manage|default(False) %}
   {% set hosts = salt['publish.publish'](datamap.orchestrate.hostlist.tgt|default('*'), 'grains.item', ['fqdn'], 'compound') %}

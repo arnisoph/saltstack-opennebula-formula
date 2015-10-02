@@ -1,6 +1,6 @@
 #!jinja|yaml
 
-{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv) %}
 
 include: {{ salt['pillar.get']('opennebula:lookup:compute_node:sls_include', ['._user_oneadmin', '.orchestrate', '._datastores']) }}
 extend: {{ salt['pillar.get']('opennebula:lookup:compute_node:sls_extend', '{}') }}

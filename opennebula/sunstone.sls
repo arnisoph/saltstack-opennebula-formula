@@ -1,6 +1,6 @@
 #!jinja|yaml
 
-{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv) %}
 {% set config = datamap.sunstone.config|default({}) %}
 {% set service = datamap.sunstone.service|default({}) %}
 

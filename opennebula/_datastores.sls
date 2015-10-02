@@ -1,6 +1,6 @@
 #!jinja|yaml
 
-{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv, ['yaml'])['yaml'] %}
+{% set datamap = salt['formhelper.get_defaults']('opennebula', saltenv) %}
 
 include:
   - opennebula._user_oneadmin
